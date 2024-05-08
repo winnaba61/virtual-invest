@@ -1,0 +1,78 @@
+.board {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-write-button {
+    width: 60px;
+    height: 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--blue);
+    color: var(--white);
+    font-size: 12px;
+    font-family: var(--font-1);
+    margin-left: 640px;
+    margin-bottom: 12px;
+}
+
+.board-table {
+    width: 800px;
+    height: 600px;
+    border-collapse: collapse;
+    border-top: none; /* 위쪽 테두리 제거 */
+    border-left: none; /* 왼쪽 테두리 제거 */
+    border-right: none; /* 오른쪽 테두리 제거 */
+}
+
+.board-table th,
+.board-table td {
+    border-top: none; /* 위쪽 테두리 제거 */
+    border-left: none; /* 왼쪽 테두리 제거 */
+    border-right: none; /* 오른쪽 테두리 제거 */
+    text-align: center;
+}
+
+.board-table th {
+    color: var(--black);
+    background-color: var(--blue);
+    border-bottom: 1px solid var(--blue);
+    padding: 8px 0;
+}
+
+.board-table td {
+    color: var(--white);
+    border-bottom: 1px solid var(--white);
+    cursor: pointer;
+}
+
+#post-number {
+    width: 10%;
+}
+
+#post-title {
+    width: 50%;
+}
+
+#post-author {
+    width: 20%;
+}
+
+#post-date {
+    width: 20%;
+}
+
+.board-pagination-button {
+    width: 160px;
+    height: 40px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--blue);
+    color: var(--white);
+    font-size: 16px;
+    margin: 60px;
+    font-family: var(--font-1);
+}
