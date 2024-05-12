@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const session = require('express-session');
+require('dotenv').config();
 
 const passport = require('passport');
 const passportConfig = require('./passport');
@@ -11,7 +13,10 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
+const db = require('./models');
+
 var app = express();
+db.sequelize.sync();
 passportConfig();
 
 // view engine setup

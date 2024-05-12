@@ -9,12 +9,17 @@
     "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "express-session": "^1.18.0",
     "http-errors": "~1.6.3",
+    "memorystore": "^1.6.7",
     "morgan": "~1.9.1",
+    "mysql2": "^3.9.7",
     "passport": "^0.7.0",
     "passport-kakao": "^1.0.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "sequelize": "^6.37.3"
   }
 }
