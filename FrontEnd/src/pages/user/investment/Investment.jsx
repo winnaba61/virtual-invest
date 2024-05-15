@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './investment.css';
 import { Topbar } from '../../../components/topbar/Topbar';
+import { stockDB } from '../../../data/stockDB';
+import { useLocation } from 'react-router-dom';
 
 export const Investment = () => {
     const [activeUnit, setActiveUnit] = useState('주'); // 초기 단위를 '주'로 설정
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const stockId = searchParams.get('stockId') || '1'; // 기본값으로 '1'을 사용
+    const stockDetail = stockDB.find((stock) => stock.id === stockId);
 
     const handleButtonClickBuy = () => {
         window.location.href = 'http://localhost:5173/mypage';
@@ -20,24 +26,24 @@ export const Investment = () => {
             <Topbar />
             <div className="investment">
                 <div className="investment-table-container">
-                    <div className="investment-title">종목명</div>
+                    <div className="investment-title" id="stock-name">
+                        {stockDetail.itmsNm}
+                    </div>
                     <table className="investment-table">
-                        <tr>
-                            <th>현재가</th>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <th>1주 당 가격</th>
-                            <td>2</td>
-                        </tr>
-                        <tr>
-                            <th>현재 보유 자산</th>
-                            <td>3</td>
-                        </tr>
-                        <tr>
-                            <th>가능 투자 주수</th>
-                            <td>4</td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th>1주 당 가격(종가)</th>
+                                <td>{Number(stockDetail.clpr).toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                                <th>현재 보유 자산</th>
+                                <td>숫자입니다</td>
+                            </tr>
+                            <tr>
+                                <th>가능 투자 주수</th>
+                                <td>숫자입니다</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div className="investment-unit-container">

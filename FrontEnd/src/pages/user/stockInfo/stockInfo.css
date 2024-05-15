@@ -7,6 +7,7 @@
     font-family: var(--font-1);
     font-size: 24px;
     margin-bottom: 12px;
+    color: var(--green);
 }
 
 .stockinfo-line {
@@ -17,13 +18,19 @@
 }
 
 .stockinfo-table {
-    width: 60%;
-    height: 80px;
+    box-sizing: border-box;
+    width: 80%;
+    height: 120px;
 }
 
 .stockinfo-table th {
     width: 80px;
     font-weight: bold;
+}
+
+.stockinfo-table td {
+    padding-left: 40px;
+    padding-right: 20px;
 }
 
 .stockinfo-chart-container {
@@ -35,12 +42,9 @@
 
 .stockinfo-chart {
     box-sizing: border-box;
-    background-color: var(--white);
     color: var(--black);
-    padding: 8px;
     width: 80%;
     height: 240px;
-    border: 1px solid var(--white);
     margin-bottom: 40px;
     margin-left: 160px;
 }

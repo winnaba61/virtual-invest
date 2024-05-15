@@ -1,6 +1,6 @@
 .investment {
     width: 800px;
-    margin-bottom: 160px;
+    height: 72vh;
 }
 
 .investment-title {
@@ -8,6 +8,11 @@
     color: var(--white);
     font-size: 20px;
     margin-bottom: 16px;
+}
+
+#stock-name {
+    color: var(--green);
+    font-size: 24px;
 }
 
 .investment-table-container {
