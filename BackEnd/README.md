@@ -20,3 +20,16 @@
 
 
 ![3](https://github.com/hanejj/private-test/assets/165184750/41331488-9453-4d27-9e2c-efe103779486)
+
+
+# 24.05.18 가상투자, 마이페이지 구현_ver1(eunjin)
+
+### 구현된 결과화면
+![4](https://github.com/winnaba61/virtual-invest/assets/165184750/0c735478-211e-418a-ad4d-fd9ee2ac370b)
+- 가상투자 예시 화면 (매수, 매도 정상 동작합니다.)
+
+![5](https://github.com/winnaba61/virtual-invest/assets/165184750/52170625-3048-451e-aeb7-01ef4161aa8d)
+- 마이페이지 예시 화면 (수익률, 수익금액은 예시로 작성해둔 것입니다.)
+
+
+
