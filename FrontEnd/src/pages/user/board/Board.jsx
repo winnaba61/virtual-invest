@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './board.css';
 import { Topbar } from '../../../components/topbar/Topbar';
 
 export const Board = () => {
-    const [currentPage] = useState(1);
+    const [currentPage, setCurrentpage] = useState(1);
+    const [contents, setContents] = useState([]);
     const postsPerPage = 15;
 
-    //데이터
-    const rows = new Array(100).fill(null).map((_, index) => ({
-        id: index + 1,
-        title: '건의사항이 있습니다',
-        author: '한지성',
-        date: '2024.03.01',
-    }));
+    useEffect(() => {
+        fetch('http://localhost:3001/boards')
+            .then(response => response.json())
+            .then(data => setContents(data));
+    }, []);
 
     const handleButtonClickWrite = () => {
-        window.location.href = 'http://localhost:5173/board/write';
+        //window.location.href = 'http://localhost:5173/board/write';
+        window.location.href = '/board/write';
+    };
+
+    const getNextPage = () => {
+        if (indexOfLastPost >= contents.length) {
+            alert("마지막 페이지입니다");
+            return;
+        }
+        setCurrentpage(currentPage + 1);
+    };
+
+    const getPrevPage = () => {
+        if (currentPage === 1) {
+            alert("이전 페이지가 없습니다!");
+            return;
+        }
+        setCurrentpage(currentPage - 1);
     };
 
     // 현재 페이지에 보여질 게시글 계산
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = rows.slice(indexOfFirstPost, indexOfLastPost);
+    const indexOfLastPost = currentPage * postsPerPage > contents.length ? contents.length : currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage < 0 ? 0 : indexOfLastPost - postsPerPage;
+    const currentPosts = contents.slice(indexOfFirstPost, indexOfLastPost > contents.length ? contents.length : indexOfLastPost);
 
     return (
         <>
@@ -40,27 +56,33 @@ export const Board = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentPosts.map((post, index) => (
-                            <tr key={post.id}>
-                                <td id="post-number">
-                                    <a href={`/board/view`}>{indexOfFirstPost + index + 1}</a>
-                                </td>
-                                <td id="post-title">
-                                    <a href={`/board/view`}>{post.title}</a>
-                                </td>
-                                <td id="post-author">
-                                    <a href={`/board/view`}>{post.author}</a>
-                                </td>
-                                <td id="post-date">
-                                    <a href={`/board/view`}>{post.date}</a>
-                                </td>
+                        {currentPosts.length > 0 ? (
+                            currentPosts.map((post, index) => (
+                                <tr key={post.id}>
+                                    <td id="post-number">
+                                        <a href={`/board/view?id=${post.id}`}>{indexOfFirstPost + index + 1}</a>
+                                    </td>
+                                    <td id="post-title">
+                                        <a href={`/board/view?id=${post.id}`}>{post.title}</a>
+                                    </td>
+                                    <td id="post-author">
+                                        <a href={`/board/view?id=${post.id}`}>{post.author}</a>
+                                    </td>
+                                    <td id="post-date">
+                                        <a href={`/board/view?id=${post.id}`}>{post.date}</a>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4">페이지 데이터가 없습니다!</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
                 <div className="board-pagination">
-                    <button className="board-pagination-button">이전</button>
-                    <button className="board-pagination-button">다음</button>
+                    <button className="board-pagination-button" onClick={getPrevPage}>이전</button>
+                    <button className="board-pagination-button" onClick={getNextPage}>다음</button>
                 </div>
             </div>
         </>

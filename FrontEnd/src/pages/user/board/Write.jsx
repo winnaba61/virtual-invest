@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './write.css';
 import { Topbar } from '../../../components/topbar/Topbar';
 
 export const Write = () => {
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
     const handleButtonClickWrite = () => {
-        window.location.href = 'http://localhost:5173/board';
+        if (!title.trim() || !content.trim()) {
+            alert('제목과 내용을 입력해주세요.');
+            return;
+        }
+
+        fetch('http://localhost:3001/boards', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title,
+                content,
+                author: '작성자',
+                date: new Date().toISOString().split('T')[0],
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('게시글 등록 성공:', data);
+                window.location.href = 'http://localhost:5173/board';
+            })
+            .catch(error => {
+                console.error('게시글 등록 실패:', error);
+            });
     };
 
     return (
@@ -13,11 +40,20 @@ export const Write = () => {
             <div className="write">
                 <div className="write-title">
                     <div id="title">제목</div>
-                    <input type="text" className="write-title-content"></input>
+                    <input
+                        type="text"
+                        className="write-title-content"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                    />
                 </div>
                 <div className="write-content">
                     <div id="title">내용</div>
-                    <input type="text" className="write-content-content"></input>
+                    <textarea
+                        className="write-content-content"
+                        value={content}
+                        onChange={e => setContent(e.target.value)}
+                    />
                 </div>
                 <div className="write-pagination">
                     <button className="write-pagination-button" onClick={handleButtonClickWrite}>

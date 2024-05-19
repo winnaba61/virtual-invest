@@ -1,0 +1,32 @@
+{
+  "boards": [
+    {
+      "id": "3",
+      "title": "건의사항이 있습니다.",
+      "content": "안녕여러분",
+      "author": "한지성",
+      "date": "2024.03.01"
+    },
+    {
+      "id": "4",
+      "title": "건의사항이 있습니다.",
+      "content": "안녕여러분",
+      "author": "한지성",
+      "date": "2024.03.01"
+    },
+    {
+      "author": "작성자",
+      "title": "test valdsf",
+      "content": "this is a test contants modified",
+      "date": "2024-05-19",
+      "id": "fb27"
+    },
+    {
+      "id": "3354",
+      "title": "abc",
+      "content": "dsf",
+      "author": "작성자",
+      "date": "2024-05-19"
+    }
+  ]
+}
