@@ -49,11 +49,6 @@
     margin: 20px 0;
 }
 
-.view-pagination {
-    display: flex;
-    justify-content: center;
-}
-
 .view-pagination-button {
     width: 160px;
     height: 40px;
