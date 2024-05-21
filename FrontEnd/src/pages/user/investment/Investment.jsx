@@ -1,8 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
 import './investment.css';
 import { Topbar } from '../../../components/topbar/Topbar';
 
 export const Investment = () => {
+
     const [activeUnit, setActiveUnit] = useState('주'); // 초기 단위를 '주'로 설정
     const [currentPrice, setCurrentPrice] = useState(null); // 현재가 데이터를 위한 상태
     const [currentWallet, setCurrentWallet] = useState(null); // 현재 보유 자산
