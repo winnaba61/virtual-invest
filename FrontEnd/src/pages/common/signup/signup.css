@@ -45,3 +45,24 @@
     background-color: var(--blue);
     color: var(--white);
 }
+
+.check-input {
+    box-sizing: border-box;
+    width: 280px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 8px;
+    border: 1px solid var(--gray);
+}
+
+.check-button {
+    box-sizing: border-box;
+    width: 70px;
+    height: 40px;
+    border-radius: 8px;
+    margin-top: 8px;
+    margin-left: 10px;
+    background-color: var(--blue);
+    color: var(--white);
+}

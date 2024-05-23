@@ -1,68 +1,337 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const session = require('express-session');
-require('dotenv').config();
+const express = require('express');
+const axios = require('axios');
+const xml2js = require('xml2js');
+const mysql = require('mysql');
+const cors = require('cors');
 
-const passport = require('passport');
-const passportConfig = require('./passport');
+const app = express();
+const port = 3000;
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
+// MySQL 연결
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'MySQLpass',
+  database: 'swe'
+});
 
-const db = require('./models');
+connection.connect();
 
-var app = express();
-db.sequelize.sync();
-passportConfig();
+// CORS 설정
+app.use(cors());
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.get('/api/current-price', (req, res) => {
+  //시가 가져오기
+  const query = 'SELECT clpr FROM stock_info WHERE id=1';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).send('Server Error');
+      return;
+    }
+    res.json(results[0]);
+  });
+});
 
-app.use(logger('dev'));
+app.get('/api/current-wallet', (req, res) => {
+  //보유 자산 가져오기
+  const query = 'SELECT user_wallet FROM user_account WHERE user_account=10000000001';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      res.status(500).send('Server Error');
+      return;
+    }
+    res.json(results[0]);
+  });
+});
+
+// POST 요청 처리
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(
-   session({
-      resave: false,
-      saveUninitialized: false,
-      secret: process.env.COOKIE_SECRET,
-      cookie: {
-         httpOnly: true,
-         secure: false,
-      },
-   }),
-);
+//  사용자 등록. 이름, 아이디, 패스워드, 생년월일, 이메일.
+app.post('/api/regist', (req, res) => {
+    const { user_name, user_id, user_passwd, user_birth, user_email } = req.body;
+    
+    const query = 'INSERT INTO logins (user_name, user_id, user_passwd, user_birth, user_email) VALUES(?,?,?,?,?)';
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/auth', authRouter)
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+    connection.query(query, [user_name, user_id, user_passwd, user_birth, user_email], (error, results) => {
+        if(error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        console.log('regist user');
+        res.status(200).json({ message: 'regist user' });
+    })
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+//  아이디 중복 체크. 중복 체크하지 않으면 회원가입 실패.
+app.post('/api/checkID', (req, res) => {
+    const checkID= req.body.user_id;
+    const check = {ischeck: ""};
+    
+    const query = 'SELECT user_id FROM logins WHERE user_id = ?';
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    connection.query(query, [checkID], (error, result) => {
+        console.log(result);
+        if(error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        if(result.length <= 0) {
+            check.ischeck = "null"
+            res.send(check);
+        }
+        else {
+            check.ischeck = "exist"
+            res.send(check);
+        }
+    })
 });
+
+//  로그인
+app.post('/api/login', (req, res) => {
+    const loginID= req.body.user_id;
+    const loginPasswd = req.body.user_passwd;
+    const login = {islogin: ""};
+
+    console.log(loginID);
+    console.log(loginPasswd);
+    
+    const query = 'SELECT * FROM logins WHERE user_id = ?';
+
+    connection.query(query, [loginID], (error, result) => {
+        console.log(result);
+        if(error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        if(result.length > 0) {
+
+            console.log('ID ok');
+
+            if(loginPasswd === result[0].user_passwd) {
+                if(error) {
+                    console.error('Error executing query:', error);
+                    res.status(500).send('Server Error');
+                    return;
+                }
+    
+                console.log('passwd ok');
+                login.islogin = "ok"
+                res.send(login);
+            }
+            else {
+                console.log('passwd fault');
+                login.islogin = "fault"
+                res.send(login);
+            }
+        }
+        else {
+            console.log('id fault');
+            login.islogin = "fault"
+            res.send(login);
+        }
+    })
+});
+
+app.post('/api/invest', (req, res) => {
+    const { investmentAmount, remainingBalance, buy_money } = req.body;
+
+    // 첫 번째 쿼리: user_account 테이블 업데이트
+    const query1 = 'UPDATE user_account SET user_wallet = ? WHERE user_account = 10000000001';
+
+    connection.query(query1, [remainingBalance], (err, result1) => {
+        if (err) {
+            console.error('Error updating user account in MySQL:', err);
+            return res.status(500).json({ error: 'Failed to update user account' });
+        }
+
+        // 두 번째 쿼리: my_stock 테이블 업데이트
+        const query2 = 'UPDATE my_stock SET stock_count= stock_count + ? WHERE user_account=10000000001';
+
+        connection.query(query2, [investmentAmount], (err, result2) => {
+            if (err) {
+                console.error('Error updating my_stock in MySQL:', err);
+                return res.status(500).json({ error: 'Failed to update my_stock' });
+            }
+
+
+            const query3 = 'UPDATE my_stock SET buy_money= buy_money + ? WHERE user_account=10000000001';
+
+            connection.query(query3, [buy_money], (err, result2) => {
+            if (err) {
+                console.error('Error updating my_stock in MySQL:', err);
+                return res.status(500).json({ error: 'Failed to update my_stock' });
+            }
+
+            // 모든 업데이트가 성공하면 성공 메시지 반환
+            console.log('Investment saved successfully to MySQL');
+            res.status(200).json({ message: 'Investment saved successfully' });
+            });
+        });
+    });
+});
+
+app.post('/api/sell', (req, res) => {
+    const { sellAmount, remainingBalance } = req.body;
+
+    // my_stock 테이블에서 현재 주식 개수 조회
+    const getCurrentStockQuery = 'SELECT stock_count FROM my_stock WHERE user_account = 10000000001';
+
+    connection.query(getCurrentStockQuery, (err, rows) => {
+        if (err) {
+            console.error('Error retrieving current stock count from MySQL:', err);
+            return res.status(500).json({ error: 'Failed to retrieve current stock count' });
+        }
+
+        // 현재 주식 개수 확인
+        const currentStockCount = rows[0].stock_count;
+
+        // 판매하려는 주식 개수가 현재 주식 개수보다 많으면 오류 반환
+        if (sellAmount > currentStockCount) {
+            return res.status(400).json({ error: 'Insufficient stock to sell' });
+        }
+
+        // 첫 번째 쿼리: user_account 테이블 업데이트
+        const query1 = 'UPDATE user_account SET user_wallet = ? WHERE user_account = 10000000001';
+
+        connection.query(query1, [remainingBalance], (err, result1) => {
+            if (err) {
+                console.error('Error updating user account in MySQL:', err);
+                return res.status(500).json({ error: 'Failed to update user account' });
+            }
+
+            // 두 번째 쿼리: my_stock 테이블 업데이트
+            const query2 = 'UPDATE my_stock SET stock_count = stock_count - ? WHERE user_account = 10000000001';
+
+            connection.query(query2, [sellAmount], (err, result2) => {
+                if (err) {
+                    console.error('Error updating my_stock in MySQL:', err);
+                    return res.status(500).json({ error: 'Failed to update my_stock' });
+                }
+
+                // 모든 업데이트가 성공하면 성공 메시지 반환
+                console.log('Investment saved successfully to MySQL');
+                res.status(200).json({ message: 'Investment saved successfully' });
+            });
+        });
+    });
+});
+
+// 사용자 정보를 반환하는 엔드포인트
+app.get('/api/username', (req, res) => {
+    // 데이터베이스 쿼리 실행
+    connection.query('SELECT user_name FROM user_info WHERE id = 1', (err, rows) => {
+        if (err) {
+            console.error('Error fetching user data from MySQL:', err);
+            res.status(500).json({ error: 'Failed to fetch user data' });
+            return;
+        }
+        // 결과를 JSON 형식으로 응답
+        res.json(rows[0]);
+    });
+});
+
+app.get('/api/userbirth', (req, res) => {
+    // 데이터베이스 쿼리 실행
+    connection.query('SELECT user_birth FROM user_info WHERE id = 1', (err, rows) => {
+        if (err) {
+            console.error('Error fetching user data from MySQL:', err);
+            res.status(500).json({ error: 'Failed to fetch user data' });
+            return;
+        }
+        // 결과를 JSON 형식으로 응답
+        res.json(rows[0]);
+    });
+});
+
+app.get('/api/userphone', (req, res) => {
+    // 데이터베이스 쿼리 실행
+    connection.query('SELECT user_phone FROM user_info WHERE id = 1', (err, rows) => {
+        if (err) {
+            console.error('Error fetching user data from MySQL:', err);
+            res.status(500).json({ error: 'Failed to fetch user data' });
+            return;
+        }
+        // 결과를 JSON 형식으로 응답
+        res.json(rows[0]);
+    });
+});
+
+app.get('/api/useraccount', (req, res) => {
+    // 데이터베이스 쿼리 실행
+    connection.query('SELECT user_account FROM user_info WHERE id = 1', (err, rows) => {
+        if (err) {
+            console.error('Error fetching user data from MySQL:', err);
+            res.status(500).json({ error: 'Failed to fetch user data' });
+            return;
+        }
+        // 결과를 JSON 형식으로 응답
+        res.json(rows[0]);
+    });
+});
+
+// 주식 이름을 가져오는 엔드포인트
+app.get('/api/stockNames', (req, res) => {
+    // 데이터베이스에서 주식 이름을 가져오는 쿼리
+    const query = 'SELECT stock_id FROM my_stock WHERE user_account=10000000001';
+
+    connection.query(query, (err, rows) => {
+        if (err) {
+            console.error('Error fetching stock names from MySQL:', err);
+            return res.status(500).json({ error: 'Failed to fetch stock names' });
+        }
+
+        // 주식 이름 배열을 클라이언트에 응답
+        const stockNames = rows.map(row => row.stock_id);
+        //const stockNames = rows;
+        res.json(stockNames);
+    });
+});
+
+// 특정 주식의 상세 정보를 가져오는 엔드포인트
+app.get('/api/stockInfo/:stockId', (req, res) => {
+    const stockId = req.params.stockId;
+    const query = 'SELECT * FROM stock_info WHERE itmsNm = ?';
+
+    connection.query(query, [stockId], (err, rows) => {
+        if (err) {
+            console.error('Error fetching stock info from MySQL:', err);
+            return res.status(500).json({ error: 'Failed to fetch stock info' });
+        }
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Stock not found' });
+        }
+        res.json(rows[0]);
+    });
+});
+
+app.get('/api/buymoney/:stockId', (req, res) => {
+    const stockId = req.params.stockId;
+    const query = 'SELECT * FROM my_stock WHERE stock_id = ?';
+
+    connection.query(query, [stockId], (err, rows) => {
+        if (err) {
+            console.error('Error fetching stock info from MySQL:', err);
+            return res.status(500).json({ error: 'Failed to fetch stock info' });
+        }
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Stock not found' });
+        }
+        res.json(rows[0]);
+    });
+});
+
+/*
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+*/
 
 module.exports = app;
