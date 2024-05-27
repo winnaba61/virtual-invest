@@ -7,23 +7,35 @@ export const View = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get("id");
+    const boardNo = queryParams.get("board");
 
     const [post, setPost] = useState(null);
 
     useEffect(() => {
+        if (!boardNo)
         fetch('http://localhost:3001/boards')
             .then(response => response.json())
             .then(data => {
                 const foundPost = data.find(item => item.id == postId);
                 setPost(foundPost);
             });
+        else
+            fetch('http://localhost:3001/Mboard')
+                .then(response => response.json())
+                .then(data => {
+                    const foundPost = data.find(item => item.id == postId);
+                    setPost(foundPost);
+                });
     }, [postId]);
 
     const handleButtonClickBoard = () => {
         window.location.href = '/board';
     };
     const handleButtonClickModify = () => {
-        window.location.href = '/board/modify?id=' + postId;
+        if (!boardNo)
+            window.location.href = '/board/modify?id=' + postId;
+        else
+            window.location.href = '/board/modify?id=' + postId + '&board=' + boardNo; 
     };
 
     if (!post) {
@@ -63,7 +75,7 @@ export const View = () => {
                 </div>
                 <div className="view-content">
                     <div id="title">내용</div>
-                    <div className="view-content-content">{ post.content }</div>
+                    <div className="view-content-content" wrap="hard">{ post.content }</div>
                 </div>
                 <div className="view-pagination">
                     <button className="view-pagination-button" onClick={handleButtonClickBoard}>

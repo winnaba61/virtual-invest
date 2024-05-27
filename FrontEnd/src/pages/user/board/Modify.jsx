@@ -7,13 +7,16 @@ export const Modify = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get("id");
+    const boardNo = queryParams.get("board");
+    const backendServerURL = boardNo == 1 ? 'http://localhost:3001/Mboard' : 'http://localhost:3001/boards';
+
 
     const [post, setPost] = useState(null);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:3001/boards')
+        fetch(backendServerURL)
             .then(response => response.json())
             .then(data => {
                 const foundPost = data.find(item => item.id == postId);
@@ -29,7 +32,8 @@ export const Modify = () => {
             return;
         }
 
-        fetch(`http://localhost:3001/boards/${postId}`, {
+        //fetch(`http://localhost:3001/boards/${postId}`, {
+        fetch(`${backendServerURL}/${postId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +56,7 @@ export const Modify = () => {
     };
 
     const handleButtonClickDelete = () => {
-        fetch(`http://localhost:3001/boards/${postId}`, {
+        fetch(`${backendServerURL}/${postId}`, {
             method: 'DELETE',
         })
             .then(() => {
@@ -98,12 +102,12 @@ export const Modify = () => {
                 </div>
                 <div className="modify-content">
                     <div id="title">내용</div>
-                    <input
-                        type="text"
-                        className="modify-content-content"
+                    <textarea
+                        className="write-content-content"
                         value={content}
                         onChange={e => setContent(e.target.value)}
-                    ></input>
+                        wrap="hard"
+                    />
                 </div>
                 <div className="modify-pagination">
                     <button className="modify-pagination-button" onClick={handleButtonClickDelete}>

@@ -5,12 +5,16 @@ import { Topbar } from '../../../components/topbar/Topbar';
 export const Board = () => {
     const [currentPage, setCurrentpage] = useState(1);
     const [contents, setContents] = useState([]);
+    const [Mcontents, setMContents] = useState([]);
     const postsPerPage = 15;
 
     useEffect(() => {
         fetch('http://localhost:3001/boards')
             .then(response => response.json())
-            .then(data => setContents(data));
+            .then(data => setContents(data.reverse()));
+        fetch('http://localhost:3001/Mboard')
+            .then(response => response.json())
+            .then(data => setMContents(data.reverse()));
     }, []);
 
     const handleButtonClickWrite = () => {
@@ -46,7 +50,7 @@ export const Board = () => {
                 <button className="board-write-button" onClick={handleButtonClickWrite}>
                     글쓰기
                 </button>
-                <table className="board-table" border="1">
+                <table className="board-table" border="1" height={40 * (indexOfLastPost - indexOfFirstPost + (currentPage == 1? Mcontents.length : 0)) + "px"}>
                     <thead>
                         <tr>
                             <th>번호</th>
@@ -56,11 +60,31 @@ export const Board = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {
+                            currentPage == 1 ?
+                                Mcontents.map((post, index) => (
+                                    <tr key={post.id}>
+                                        <td id="post-number">
+                                            <a href={`/board/view?id=${post.id}&board=1`}>{Mcontents.length - index}</a>
+                                    </td>
+                                    <td id="post-title">
+                                        <a href={`/board/view?id=${post.id}&board=1`}>{post.title}</a>
+                                    </td>
+                                    <td id="post-author">
+                                        <a href={`/board/view?id=${post.id}&board=1`}>{post.author}</a>
+                                    </td>
+                                    <td id="post-date">
+                                        <a href={`/board/view?id=${post.id}&board=1`}>{post.date}</a>
+                                    </td>
+                                </tr>
+                                )):("")
+
+                        }
                         {currentPosts.length > 0 ? (
                             currentPosts.map((post, index) => (
                                 <tr key={post.id}>
                                     <td id="post-number">
-                                        <a href={`/board/view?id=${post.id}`}>{indexOfFirstPost + index + 1}</a>
+                                        <a href={`/board/view?id=${post.id}`}>{contents.length - (indexOfFirstPost + index)}</a>
                                     </td>
                                     <td id="post-title">
                                         <a href={`/board/view?id=${post.id}`}>{post.title}</a>

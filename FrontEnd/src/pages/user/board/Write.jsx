@@ -53,6 +53,7 @@ export const Write = () => {
                         className="write-content-content"
                         value={content}
                         onChange={e => setContent(e.target.value)}
+                        wrap="hard"
                     />
                 </div>
                 <div className="write-pagination">
