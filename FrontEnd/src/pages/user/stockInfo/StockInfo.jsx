@@ -3,8 +3,9 @@ import { Topbar } from '../../../components/topbar/Topbar';
 import { stockDB } from '../../../data/stockDB';
 import { useLocation } from 'react-router-dom';
 import { ChartLine } from '../../../components/chart/ChartLine';
-import { ChartCandle } from '../../../components/chart/ChartCandle';
+import { ChartCandle01, ChartCandle02 } from '../../../components/chart/ChartCandle';
 import { dummyData } from '../../../data/dummyData';
+import { ChartBar } from '../../../components/chart/ChartBar';
 
 export const StockInfo = () => {
     const location = useLocation();
@@ -55,10 +56,19 @@ export const StockInfo = () => {
                     <div className="stockinfo-line" />
                     <div className="stockinfo-chart-container">
                         <div className="stockinfo-chart">
-                            <ChartLine title="라인그래프" data={dummyData} />
+                            <ChartLine id={stockId} title="라인그래프" />
+                        </div>
+                        <div className="stockinfo-chart" id="bar">
+                            <ChartBar data={dummyData} />
+                        </div>
+                        <div className="stockinfo-chart" id="candle">
+                            <ChartCandle02 data={dummyData} />
                         </div>
                         <div className="stockinfo-chart">
-                            <ChartCandle title="캔들그래프" data={dummyData} />
+                            <ChartCandle01 data={dummyData} />
+                        </div>
+                        <div className="stockinfo-chart" id="bar">
+                            <ChartBar data={dummyData} />
                         </div>
                     </div>
                     <div className="stockinfo-pagination">

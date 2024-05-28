@@ -46,7 +46,15 @@
     margin-left: 80px;
     width: 90%;
     height: 320px;
+}
+
+#bar {
+    height: 100px;
     margin-bottom: 40px;
+}
+
+#candle {
+    margin-top: -320px;
 }
 
 .stockinfo-pagination {

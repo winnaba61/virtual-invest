@@ -30,7 +30,7 @@ export const Main = () => {
                                     <th>전일비</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {/* <tbody>
                                 {currentStock.map((stock) => (
                                     <tr key={stock.id}>
                                         <td id="stock-title">
@@ -44,7 +44,7 @@ export const Main = () => {
                                         </td>
                                     </tr>
                                 ))}
-                            </tbody>
+                            </tbody> */}
                         </table>
                     </div>
                 </div>
