@@ -14,72 +14,71 @@ export const Mypage = () => {
 
     useEffect(() => {
         fetch('http://localhost:3000/api/username')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data_name => {
+            .then((data_name) => {
                 console.log('Received data:', data_name); // 디버깅 로그 추가
                 setUserName(data_name.user_name);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
 
     useEffect(() => {
         fetch('http://localhost:3000/api/userbirth')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data_birth => {
+            .then((data_birth) => {
                 console.log('Received data:', data_birth); // 디버깅 로그 추가
                 // 날짜를 ISO 형식으로 가져오므로 날짜 부분만 추출하여 사용
                 const birthDate = new Date(data_birth.user_birth);
                 const formattedDate = birthDate.toISOString().slice(0, 10);
                 setUserBirth(formattedDate);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
 
-
     useEffect(() => {
         fetch('http://localhost:3000/api/userphone')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data_phone => {
+            .then((data_phone) => {
                 console.log('Received data:', data_phone); // 디버깅 로그 추가
                 setUserPhone(data_phone.user_phone);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
 
     useEffect(() => {
         fetch('http://localhost:3000/api/useraccount')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data_account => {
+            .then((data_account) => {
                 console.log('Received data:', data_account); // 디버깅 로그 추가
                 setUserAcc(data_account.user_account);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
@@ -87,17 +86,17 @@ export const Mypage = () => {
     useEffect(() => {
         // 서버로부터 보유 자산 데이터를 요청
         fetch('http://localhost:3000/api/current-wallet')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(wallet_data => {
+            .then((wallet_data) => {
                 console.log('Received data:', wallet_data); // 디버깅 로그 추가
                 setCurrentWallet(wallet_data.user_wallet);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
@@ -105,31 +104,30 @@ export const Mypage = () => {
     useEffect(() => {
         // 서버로부터 주식 이름 배열을 가져오는 함수
         fetch('http://localhost:3000/api/stockNames')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data => {
+            .then((data) => {
                 console.log('Received data:', data); // 디버깅 로그 추가
                 setStockNames(data);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
-
 
     const fetchStockInfo = async (stockName) => {
         if (!stockInfos[stockName]) {
             try {
                 const response = await fetch(`http://localhost:3000/api/stockInfo/${stockName}`);
                 const data = await response.json();
-                setStockInfos(prev => ({ ...prev, [stockName]: data }));
+                setStockInfos((prev) => ({ ...prev, [stockName]: data }));
             } catch (error) {
                 console.error('Error fetching stock info:', error);
-                setStockInfos(prev => ({ ...prev, [stockName]: 'Failed to fetch' }));
+                setStockInfos((prev) => ({ ...prev, [stockName]: 'Failed to fetch' }));
             }
         }
         return stockInfos[stockName];
@@ -140,10 +138,10 @@ export const Mypage = () => {
             try {
                 const response = await fetch(`http://localhost:3000/api/buymoney/${stockName}`);
                 const data = await response.json();
-                setStockEach(prev => ({ ...prev, [stockName]: data }));
+                setStockEach((prev) => ({ ...prev, [stockName]: data }));
             } catch (error) {
                 console.error('Error fetching stock info:', error);
-                setStockEach(prev => ({ ...prev, [stockName]: 'Failed to fetch' }));
+                setStockEach((prev) => ({ ...prev, [stockName]: 'Failed to fetch' }));
             }
         }
         return stockEach[stockName];
@@ -219,8 +217,6 @@ export const Mypage = () => {
                                 <td>{fetchStockInfo2(stock) ? stockEach[stock]?.stock_count || '-' : 'Loading...'}</td>
                             </tr>
                         ))}
-
-                        
                     </table>
                 </div>
             </div>

@@ -7,6 +7,8 @@
     --white: #f2f2f2;
     --blue: #5983d9;
     --green: #a1a640;
+    --positive: #e94560;
+    --negative: #006dee;
 }
 
 .container {
@@ -15,7 +17,6 @@
     flex-direction: column;
     align-items: center;
     width: 100vw;
-    height: 100vh;
     padding: 0 0 80px 0;
     background-color: var(--background-color);
     color: var(--black);
