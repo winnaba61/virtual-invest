@@ -2,7 +2,7 @@ import './login.css';
 
 export const Login = () => {
     const handleButtonClickLogin = () => {
-        window.location.href = 'http://localhost:5173/main'; // 원하는 주소로 변경하세요
+        window.location.href = '/main'; // 원하는 주소로 변경하세요
     };
 
     return (
