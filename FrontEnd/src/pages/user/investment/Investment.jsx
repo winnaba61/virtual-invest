@@ -3,9 +3,15 @@ import './investment.css';
 import { Topbar } from '../../../components/topbar/Topbar';
 import { stockDB } from '../../../data/stockDB';
 import { useLocation } from 'react-router-dom';
+import { stockDB } from '../../../data/stockDB';
+import { useLocation } from 'react-router-dom';
 
 export const Investment = () => {
     const [activeUnit, setActiveUnit] = useState('주'); // 초기 단위를 '주'로 설정
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const stockId = searchParams.get('stockId') || '1'; // 기본값으로 '1'을 사용
+    const stockDetail = stockDB.find((stock) => stock.id === stockId);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const stockId = searchParams.get('stockId') || '1'; // 기본값으로 '1'을 사용
@@ -18,15 +24,18 @@ export const Investment = () => {
         // 서버로부터 현재가 데이터를 요청
         fetch('http://localhost:3000/api/current-price')
             .then((response) => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((price_data) => {
+            .then((price_data) => {
                 console.log('Received data:', price_data); // 디버깅 로그 추가
                 setCurrentPrice(price_data.clpr);
             })
+            .catch((error) => {
             .catch((error) => {
                 console.error('Error fetching current price:', error);
             });
@@ -36,15 +45,18 @@ export const Investment = () => {
         // 서버로부터 보유 자산 데이터를 요청
         fetch('http://localhost:3000/api/current-wallet')
             .then((response) => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((wallet_data) => {
+            .then((wallet_data) => {
                 console.log('Received data:', wallet_data); // 디버깅 로그 추가
                 setCurrentWallet(wallet_data.user_wallet);
             })
+            .catch((error) => {
             .catch((error) => {
                 console.error('Error fetching:', error);
             });
@@ -137,8 +149,11 @@ export const Investment = () => {
                     investmentAmount: Math.floor(investmentValue / currentPrice),
                     remainingBalance: currentWallet - Math.floor(investmentValue / currentPrice) * currentPrice, // 잔여 잔고는 변경된 금액으로 계산
                     buy_money: Math.floor(investmentAmount / currentPrice) * currentPrice,
+                    remainingBalance: currentWallet - Math.floor(investmentValue / currentPrice) * currentPrice, // 잔여 잔고는 변경된 금액으로 계산
+                    buy_money: Math.floor(investmentAmount / currentPrice) * currentPrice,
                 }),
             })
+                .then((response) => {
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -146,10 +161,12 @@ export const Investment = () => {
                     return response.json();
                 })
                 .then((data) => {
+                .then((data) => {
                     console.log('Investment successful:', data);
                     // 투자가 성공하면 마이페이지로 이동
                     window.location.href = 'http://localhost:5173/mypage';
                 })
+                .catch((error) => {
                 .catch((error) => {
                     console.error('Error investing:', error);
                     // 투자에 실패하면 오류 메시지 출력
@@ -186,16 +203,19 @@ export const Investment = () => {
                 }),
             })
                 .then((response) => {
+                .then((response) => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
                 .then((data) => {
+                .then((data) => {
                     console.log('Sell successful:', data);
                     // 매도에 성공하면 마이페이지로 이동
                     window.location.href = 'http://localhost:5173/mypage';
                 })
+                .catch((error) => {
                 .catch((error) => {
                     console.error('Error selling:', error);
                     // 매도에 실패하면 오류 메시지 출력
@@ -214,8 +234,10 @@ export const Investment = () => {
                 body: JSON.stringify({
                     sellAmount: Math.floor(SellAmount / currentPrice),
                     remainingBalance: currentWallet + Math.floor(SellAmount / currentPrice) * currentPrice, // 잔여 잔고는 변경된 금액으로 계산
+                    remainingBalance: currentWallet + Math.floor(SellAmount / currentPrice) * currentPrice, // 잔여 잔고는 변경된 금액으로 계산
                 }),
             })
+                .then((response) => {
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -223,10 +245,12 @@ export const Investment = () => {
                     return response.json();
                 })
                 .then((data) => {
+                .then((data) => {
                     console.log('Sell successful:', data);
                     // 매도에 성공하면 마이페이지로 이동
                     window.location.href = 'http://localhost:5173/mypage';
                 })
+                .catch((error) => {
                 .catch((error) => {
                     console.error('Error selling:', error);
                     // 매도에 실패하면 오류 메시지 출력
@@ -280,6 +304,9 @@ export const Investment = () => {
             <Topbar />
             <div className="investment">
                 <div className="investment-table-container">
+                    <div className="investment-title" id="stock-name">
+                        {stockDetail.itmsNm}
+                    </div>
                     <div className="investment-title" id="stock-name">
                         {stockDetail.itmsNm}
                     </div>

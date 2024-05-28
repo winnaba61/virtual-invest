@@ -8,6 +8,12 @@
     margin: 20px 0;
 }
 
+.view-author {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
 #title {
     font-family: var(--font-1);
     font-size: 16px;
@@ -43,6 +49,7 @@
     color: var(--black);
     margin-top: 16px;
     margin-bottom: 40px;
+    white-space: pre-wrap;
 }
 
 .view-content {

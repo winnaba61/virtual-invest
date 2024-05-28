@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './main.css';
 import Topbar from '../../../components/topbar/Topbar';
+import { dummyData } from '../../../data/dummyData';
+import { ChartLine } from '../../../components/chart/ChartLine';
 
 export const Main = () => {
     const [currentPage] = useState(1);
@@ -24,9 +26,15 @@ export const Main = () => {
             <div className="main">
                 <div className="main-container">
                     <div className="main-chart-container">
-                        <div className="main-chart">코스피</div>
-                        <div className="main-chart">코스닥</div>
-                        <div className="main-chart">코스피2000</div>
+                        <div className="main-chart">
+                            <ChartLine title="코스피" data={dummyData} />
+                        </div>
+                        <div className="main-chart">
+                            <ChartLine title="코스닥" data={dummyData} />
+                        </div>
+                        <div className="main-chart">
+                            <ChartLine title="코스넥" data={dummyData} />
+                        </div>
                     </div>
                     <div className="main-table-container">
                         <table className="main-table" border="1">
@@ -37,7 +45,7 @@ export const Main = () => {
                                     <th>전일비</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {/* <tbody>
                                 {currentStock.map((stock) => (
                                     <tr key={stock.id}>
                                         <td id="stock-title">
@@ -51,7 +59,7 @@ export const Main = () => {
                                         </td>
                                     </tr>
                                 ))}
-                            </tbody>
+                            </tbody> */}
                         </table>
                     </div>
                 </div>
