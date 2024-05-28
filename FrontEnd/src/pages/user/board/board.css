@@ -1,5 +1,4 @@
 .board {
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,7 +46,6 @@
 .board-table td {
     color: var(--white);
     border-bottom: 1px solid var(--white);
-    cursor: pointer;
 }
 
 #post-number {

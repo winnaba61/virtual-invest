@@ -1,5 +1,6 @@
 .write {
     color: var(--white);
+    margin-bottom: 40px;
 }
 
 .write-date {

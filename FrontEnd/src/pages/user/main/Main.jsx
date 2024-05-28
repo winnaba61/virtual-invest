@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './main.css';
 import Topbar from '../../../components/topbar/Topbar';
 import { dummyData } from '../../../data/dummyData';
 import { ChartLine } from '../../../components/chart/ChartLine';
 
 export const Main = () => {
+    const [currentPage] = useState(1);
+    const stockPerPage = 10;
+
+    //데이터
+    const rows = new Array(100).fill(null).map(() => ({
+        name: '삼성전자',
+        price: 79700,
+        change: 5432,
+    }));
+
+    // 현재 페이지에 보여질 게시글 계산
+    const indexOfLastStock = currentPage * stockPerPage;
+    const indexOfFirstStock = indexOfLastStock - stockPerPage;
+    const currentStock = rows.slice(indexOfFirstStock, indexOfLastStock);
+
     return (
         <>
             <Topbar />

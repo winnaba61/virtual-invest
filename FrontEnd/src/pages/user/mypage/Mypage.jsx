@@ -11,9 +11,15 @@ export const Mypage = () => {
     const [stockNames, setStockNames] = useState([]);
     const [stockInfos, setStockInfos] = useState({});
     const [stockEach, setStockEach] = useState([]);
+    const [buyMoney, setBuyMoney] = useState(null);
+    const [calculatedValue, setCalculatedValue] = useState({});
+    const [calculatedValue2, setCalculatedValue2] = useState({});
+    const [calculatedValue3, setCalculatedValue3] = useState({});
+    const [calculatedValue4, setCalculatedValue4] = useState({});
 
     useEffect(() => {
         fetch('http://localhost:3000/api/username')
+            .then((response) => {
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -21,9 +27,11 @@ export const Mypage = () => {
                 return response.json();
             })
             .then((data_name) => {
+            .then((data_name) => {
                 console.log('Received data:', data_name); // 디버깅 로그 추가
                 setUserName(data_name.user_name);
             })
+            .catch((error) => {
             .catch((error) => {
                 console.error('Error fetching:', error);
             });
@@ -32,11 +40,13 @@ export const Mypage = () => {
     useEffect(() => {
         fetch('http://localhost:3000/api/userbirth')
             .then((response) => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
+            .then((data_birth) => {
             .then((data_birth) => {
                 console.log('Received data:', data_birth); // 디버깅 로그 추가
                 // 날짜를 ISO 형식으로 가져오므로 날짜 부분만 추출하여 사용
@@ -45,6 +55,7 @@ export const Mypage = () => {
                 setUserBirth(formattedDate);
             })
             .catch((error) => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
@@ -52,15 +63,18 @@ export const Mypage = () => {
     useEffect(() => {
         fetch('http://localhost:3000/api/userphone')
             .then((response) => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((data_phone) => {
+            .then((data_phone) => {
                 console.log('Received data:', data_phone); // 디버깅 로그 추가
                 setUserPhone(data_phone.user_phone);
             })
+            .catch((error) => {
             .catch((error) => {
                 console.error('Error fetching:', error);
             });
@@ -69,15 +83,18 @@ export const Mypage = () => {
     useEffect(() => {
         fetch('http://localhost:3000/api/useraccount')
             .then((response) => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((data_account) => {
+            .then((data_account) => {
                 console.log('Received data:', data_account); // 디버깅 로그 추가
                 setUserAcc(data_account.user_account);
             })
+            .catch((error) => {
             .catch((error) => {
                 console.error('Error fetching:', error);
             });
@@ -87,15 +104,18 @@ export const Mypage = () => {
         // 서버로부터 보유 자산 데이터를 요청
         fetch('http://localhost:3000/api/current-wallet')
             .then((response) => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((wallet_data) => {
+            .then((wallet_data) => {
                 console.log('Received data:', wallet_data); // 디버깅 로그 추가
                 setCurrentWallet(wallet_data.user_wallet);
             })
+            .catch((error) => {
             .catch((error) => {
                 console.error('Error fetching:', error);
             });
@@ -119,14 +139,40 @@ export const Mypage = () => {
             });
     }, []);
 
+<<<<<<< HEAD
+    useEffect(() => {
+        // 서버로부터 매수 원금을 요청
+        fetch('http://localhost:3000/api/buymoney')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Buy Money:', data.buyMoney);
+                console.log('Sell Money:', data.sellMoney);
+                console.log('Difference:', data.difference);
+                setBuyMoney(data.difference);
+            })
+            .catch((error) => {
+                console.error('Error fetching:', error);
+            });
+    }, []);
+
+
+=======
+>>>>>>> 4b570676da18a25aff416dce2945cbba0aa26d22
     const fetchStockInfo = async (stockName) => {
         if (!stockInfos[stockName]) {
             try {
                 const response = await fetch(`http://localhost:3000/api/stockInfo/${stockName}`);
                 const data = await response.json();
                 setStockInfos((prev) => ({ ...prev, [stockName]: data }));
+                setStockInfos((prev) => ({ ...prev, [stockName]: data }));
             } catch (error) {
                 console.error('Error fetching stock info:', error);
+                setStockInfos((prev) => ({ ...prev, [stockName]: 'Failed to fetch' }));
                 setStockInfos((prev) => ({ ...prev, [stockName]: 'Failed to fetch' }));
             }
         }
@@ -139,13 +185,88 @@ export const Mypage = () => {
                 const response = await fetch(`http://localhost:3000/api/buymoney/${stockName}`);
                 const data = await response.json();
                 setStockEach((prev) => ({ ...prev, [stockName]: data }));
+                setStockEach((prev) => ({ ...prev, [stockName]: data }));
             } catch (error) {
                 console.error('Error fetching stock info:', error);
+                setStockEach((prev) => ({ ...prev, [stockName]: 'Failed to fetch' }));
                 setStockEach((prev) => ({ ...prev, [stockName]: 'Failed to fetch' }));
             }
         }
         return stockEach[stockName];
     };
+
+    useEffect(() => {
+        const calculateStockValues = async () => {
+            for (const stock of stockNames) {
+                try {
+                    const stockInfoData = await fetchStockInfo(stock);
+                    const myStockData = await fetchStockInfo2(stock);
+                    const calculatedResult = ((myStockData?.buy_money) - (myStockData?.sell_money)) - ((myStockData?.stock_count) * (stockInfoData?.clpr));
+                    setCalculatedValue(prev => ({ ...prev, [stock]: calculatedResult }));
+                } catch (error) {
+                    console.error('Error fetching stock info:', error);
+                    setCalculatedValue(prev => ({ ...prev, [stock]: 'Failed to fetch' }));
+                }
+            }
+        };
+
+        calculateStockValues();
+    }, [stockNames]);
+
+    useEffect(() => {
+        const calculateStockValues2 = async () => {
+            for (const stock of stockNames) {
+                try {
+                    const stockInfoData = await fetchStockInfo(stock);
+                    const myStockData = await fetchStockInfo2(stock);
+                    const calculatedResult2 = (((myStockData?.buy_money) - (myStockData?.sell_money)) - ((myStockData?.stock_count) * (stockInfoData?.clpr))) / ((myStockData?.buy_money) - (myStockData?.sell_money)) * 100;
+                    setCalculatedValue2(prev => ({ ...prev, [stock]: calculatedResult2 }));
+                } catch (error) {
+                    console.error('Error fetching stock info:', error);
+                    setCalculatedValue2(prev => ({ ...prev, [stock]: 'Failed to fetch' }));
+                }
+            }
+        };
+
+        calculateStockValues2();
+    }, [stockNames]);
+
+    useEffect(() => {
+        const calculateStockValues3 = async () => {
+            for (const stock of stockNames) {
+                try {
+                    const stockInfoData = await fetchStockInfo(stock);
+                    const myStockData = await fetchStockInfo2(stock);
+                    const calculatedResult3 = (myStockData?.buy_money) - (myStockData?.sell_money);
+                    setCalculatedValue3(prev => ({ ...prev, [stock]: calculatedResult3 }));
+                } catch (error) {
+                    console.error('Error fetching stock info:', error);
+                    setCalculatedValue3(prev => ({ ...prev, [stock]: 'Failed to fetch' }));
+                }
+            }
+        };
+
+        calculateStockValues3();
+    }, [stockNames]);
+
+    useEffect(() => {
+        const calculateStockValues4 = async () => {
+            for (const stock of stockNames) {
+                try {
+                    const stockInfoData = await fetchStockInfo(stock);
+                    const myStockData = await fetchStockInfo2(stock);
+                    const calculatedResult4 = (myStockData?.stock_count) * (stockInfoData?.clpr);
+                    setCalculatedValue4(prev => ({ ...prev, [stock]: calculatedResult4 }));
+                } catch (error) {
+                    console.error('Error fetching stock info:', error);
+                    setCalculatedValue4(prev => ({ ...prev, [stock]: 'Failed to fetch' }));
+                }
+            }
+        };
+
+        calculateStockValues4();
+    }, [stockNames]);
+
 
     return (
         <>
@@ -179,19 +300,43 @@ export const Mypage = () => {
                     <table className="mypage-stocks-table">
                         <tr>
                             <th>초기 투자 자금</th>
-                            <td>1000000</td>
+                            <td>1000000 원</td>
                         </tr>
                         <tr>
                             <th>매수 원금</th>
-                            <td>보유주식 처리 후 입력</td>
+                            <td>
+                                {stockNames.length > 0 ? (
+                                    // 주식 이름마다의 매수 원금을 모두 더해서 출력
+                                    stockNames.reduce((totalProfit, stock) => {
+                                        // 해당 주식의 매수 원금 계산
+                                        const profit = typeof calculatedValue3[stock] === 'number' ? calculatedValue3[stock] : 0;
+                                        // 매수 원금 합산
+                                        return totalProfit + profit;
+                                    }, 0) + ' 원'
+                                ) : (
+                                    'Loading...'
+                                )}
+                            </td>
                         </tr>
                         <tr>
                             <th>총 주식 평가금액</th>
-                            <td>보유주식 처리 후 입력</td>
+                            <td>
+                                {stockNames.length > 0 ? (
+                                    // 주식 이름마다의 총 시장 가치를 모두 더해서 출력
+                                    stockNames.reduce((totalProfit4, stock) => {
+                                        // 시장 가치 계산
+                                        const profit4 = typeof calculatedValue4[stock] === 'number' ? calculatedValue4[stock] : 0;
+                                        // 시장 가치 합산
+                                        return totalProfit4 + profit4;
+                                    }, 0) + ' 원'
+                                ) : (
+                                    'Loading...'
+                                )}
+                            </td>
                         </tr>
                         <tr>
                             <th>현 투자 가능 금액</th>
-                            <td>{currentWallet !== null ? currentWallet : 'Loading...'}</td>
+                            <td>{currentWallet !== null ? currentWallet : 'Loading...'} 원</td>
                         </tr>
                     </table>
                 </div>
@@ -212,9 +357,10 @@ export const Mypage = () => {
                                 <td>
                                     <a href={'/stockInfo/${stock}'}>{stock}</a>
                                 </td>
-                                <td>{fetchStockInfo(stock) ? stockInfos[stock]?.vs || '-' : 'Loading...'}</td>
-                                <td>{fetchStockInfo(stock) ? stockInfos[stock]?.vs || '-' : 'Loading...'}</td>
-                                <td>{fetchStockInfo2(stock) ? stockEach[stock]?.stock_count || '-' : 'Loading...'}</td>
+                                <td>{typeof calculatedValue2[stock] === 'number' ? calculatedValue2[stock].toFixed(2) : 'Loading...'} %</td>
+                                <td>{typeof calculatedValue[stock] === 'number' ? calculatedValue[stock].toFixed(2) : 'Loading...'} 원</td>
+                                <td>{fetchStockInfo2(stock) ? stockEach[stock]?.stock_count || '-' : 'Loading...'} 주</td>
+
                             </tr>
                         ))}
                     </table>
