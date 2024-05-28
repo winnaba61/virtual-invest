@@ -1,6 +1,6 @@
 .main-container {
     width: 800px;
-    margin-bottom: 40px;
+    height: 72vh;
 }
 
 .main-chart-container {
@@ -14,7 +14,6 @@
 .main-chart {
     width: 30%;
     height: 200px;
-    border: 1px solid var(--white);
 }
 
 .main-table-container {
