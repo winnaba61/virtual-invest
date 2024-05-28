@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './investment.css';
 import { Topbar } from '../../../components/topbar/Topbar';
+import { stockDB } from '../../../data/stockDB';
+import { useLocation } from 'react-router-dom';
 
 export const Investment = () => {
-
     const [activeUnit, setActiveUnit] = useState('주'); // 초기 단위를 '주'로 설정
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const stockId = searchParams.get('stockId') || '1'; // 기본값으로 '1'을 사용
+    const stockDetail = stockDB.find((stock) => stock.id === stockId);
     const [currentPrice, setCurrentPrice] = useState(null); // 현재가 데이터를 위한 상태
     const [currentWallet, setCurrentWallet] = useState(null); // 현재 보유 자산
     const [investmentValue, setInvestmentValue] = useState('');
@@ -12,17 +17,17 @@ export const Investment = () => {
     useEffect(() => {
         // 서버로부터 현재가 데이터를 요청
         fetch('http://localhost:3000/api/current-price')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(price_data => {
+            .then((price_data) => {
                 console.log('Received data:', price_data); // 디버깅 로그 추가
                 setCurrentPrice(price_data.clpr);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching current price:', error);
             });
     }, []);
@@ -30,17 +35,17 @@ export const Investment = () => {
     useEffect(() => {
         // 서버로부터 보유 자산 데이터를 요청
         fetch('http://localhost:3000/api/current-wallet')
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(wallet_data => {
+            .then((wallet_data) => {
                 console.log('Received data:', wallet_data); // 디버깅 로그 추가
                 setCurrentWallet(wallet_data.user_wallet);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching:', error);
             });
     }, []);
@@ -52,6 +57,7 @@ export const Investment = () => {
             console.log('매수:', investmentAmount);
             const remainingBalance = currentWallet - investmentAmount;
 
+<<<<<<< HEAD
             const investableShares = Math.floor(currentWallet / currentPrice); // 투자 가능한 주식 수 계산
 
             if (investableShares >= parseInt(investmentValue)) { // 투자 가능한 주식 수를 초과하는지 확인
@@ -87,6 +93,36 @@ export const Investment = () => {
                 // 투자 가능한 주식 수를 초과하는 경우 경고창 출력
                 alert('투자 가능한 주식의 수를 초과했습니다.');
             }
+=======
+            // 서버로 투자한 주 수, 잔여 잔고를 전달
+            fetch('http://localhost:3000/api/invest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    investmentAmount: Math.floor(investmentAmount / currentPrice),
+                    remainingBalance,
+                    buy_money: Math.floor(investmentAmount / currentPrice) * currentPrice,
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Investment successful:', data);
+                    // 투자가 성공하면 마이페이지로 이동
+                    window.location.href = 'http://localhost:5173/mypage';
+                })
+                .catch((error) => {
+                    console.error('Error investing:', error);
+                    // 투자에 실패하면 오류 메시지 출력
+                    alert('투자에 실패했습니다. 다시 시도해주세요.');
+                });
+>>>>>>> 4b570676da18a25aff416dce2945cbba0aa26d22
         } else {
             const investmentAmount = parseInt(investmentValue);
             console.log('매수:', investmentAmount);
@@ -99,22 +135,22 @@ export const Investment = () => {
                 },
                 body: JSON.stringify({
                     investmentAmount: Math.floor(investmentValue / currentPrice),
-                    remainingBalance: currentWallet - (Math.floor(investmentValue / currentPrice) * currentPrice), // 잔여 잔고는 변경된 금액으로 계산
-                    buy_money: (Math.floor(investmentAmount / currentPrice) * currentPrice),
+                    remainingBalance: currentWallet - Math.floor(investmentValue / currentPrice) * currentPrice, // 잔여 잔고는 변경된 금액으로 계산
+                    buy_money: Math.floor(investmentAmount / currentPrice) * currentPrice,
                 }),
             })
-                .then(response => {
+                .then((response) => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then((data) => {
                     console.log('Investment successful:', data);
                     // 투자가 성공하면 마이페이지로 이동
                     window.location.href = 'http://localhost:5173/mypage';
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error investing:', error);
                     // 투자에 실패하면 오류 메시지 출력
                     alert('투자에 실패했습니다. 다시 시도해주세요.');
@@ -127,11 +163,76 @@ export const Investment = () => {
         let sellAmount, sellMoney, remainingBalance;
 
         if (activeUnit === '주') {
+<<<<<<< HEAD
             sellAmount = investmentValueInt;
             sellMoney = sellAmount * currentPrice;
         } else {
             sellMoney = investmentValueInt;
             sellAmount = Math.floor(sellMoney / currentPrice);
+=======
+            const SellAmount = parseInt(investmentValue) * currentPrice;
+            console.log('매도:', SellAmount);
+            const remainingBalance = currentWallet + SellAmount;
+
+            // 서버로 매도한 주 수, 잔여 잔고를 전달
+            fetch('http://localhost:3000/api/sell', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    sellAmount: Math.floor(SellAmount / currentPrice),
+                    remainingBalance,
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Sell successful:', data);
+                    // 매도에 성공하면 마이페이지로 이동
+                    window.location.href = 'http://localhost:5173/mypage';
+                })
+                .catch((error) => {
+                    console.error('Error selling:', error);
+                    // 매도에 실패하면 오류 메시지 출력
+                    alert('매도에 실패했습니다. 다시 시도해주세요.');
+                });
+        } else {
+            const SellAmount = parseInt(investmentValue);
+            console.log('매도:', SellAmount);
+
+            // 서버로 매도 금액을 전달
+            fetch('http://localhost:3000/api/sell', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    sellAmount: Math.floor(SellAmount / currentPrice),
+                    remainingBalance: currentWallet + Math.floor(SellAmount / currentPrice) * currentPrice, // 잔여 잔고는 변경된 금액으로 계산
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Sell successful:', data);
+                    // 매도에 성공하면 마이페이지로 이동
+                    window.location.href = 'http://localhost:5173/mypage';
+                })
+                .catch((error) => {
+                    console.error('Error selling:', error);
+                    // 매도에 실패하면 오류 메시지 출력
+                    alert('매도에 실패했습니다. 다시 시도해주세요.');
+                });
+>>>>>>> 4b570676da18a25aff416dce2945cbba0aa26d22
         }
 
         remainingBalance = currentWallet + sellMoney;
@@ -173,14 +274,15 @@ export const Investment = () => {
     const handleInputChange = (e) => {
         setInvestmentValue(e.target.value);
     };
- 
 
     return (
         <>
             <Topbar />
             <div className="investment">
                 <div className="investment-table-container">
-                    <div className="investment-title">종목명</div>
+                    <div className="investment-title" id="stock-name">
+                        {stockDetail.itmsNm}
+                    </div>
                     <table className="investment-table">
                         <tr>
                             <th>현재가</th>
@@ -216,18 +318,28 @@ export const Investment = () => {
                     </button>
                 </div>
                 <div className="investment-price-container">
+<<<<<<< HEAD
                     <div className="investment-title">매수/매도 금액 입력</div>
                     <input className="investment-price" type="number" value={investmentValue} onChange={handleInputChange} />
-                </div>
-                <div className="investment-pagination">
-                    <button className="investment-pagination-button" onClick={handleButtonClickBuy}>
-                        매수
-                    </button>
-                    <button className="investment-pagination-button" onClick={handleButtonClickSell}>
-                        매도
-                    </button>
-                </div>
-            </div>
+=======
+                    <div className="investment-title">투자 금액 입력</div>
+                    <input
+                        className="investment-price"
+                        type="number"
+                        value={investmentValue}
+                        onChange={handleInputChange}
+                    />
+>>>>>>> 4b570676da18a25aff416dce2945cbba0aa26d22
+                </div >
+    <div className="investment-pagination">
+        <button className="investment-pagination-button" onClick={handleButtonClickBuy}>
+            매수
+        </button>
+        <button className="investment-pagination-button" onClick={handleButtonClickSell}>
+            매도
+        </button>
+    </div>
+            </div >
         </>
     );
 };
