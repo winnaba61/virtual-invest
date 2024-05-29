@@ -9,10 +9,10 @@ const port = 3000;
 
 // MySQL 연결
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '1234',
-  database: 'project3'
+    host: 'localhost',
+    user: 'root',
+    password: '1234',
+    database: 'project3',
 });
 
 connection.connect();
@@ -21,33 +21,120 @@ connection.connect();
 app.use(cors());
 
 app.get('/api/current-price', (req, res) => {
-  //시가 가져오기
-  const query = 'SELECT clpr FROM stock_info WHERE itmsNm="이스트아시아홀딩스"';
-  connection.query(query, (error, results) => {
-    if (error) {
-      console.error('Error executing query:', error);
-      res.status(500).send('Server Error');
-      return;
-    }
-    res.json(results[0]);
-  });
+    //시가 가져오기
+    const query = 'SELECT clpr FROM stock_info WHERE itmsNm="이스트아시아홀딩스"';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
 });
 
 app.get('/api/current-wallet', (req, res) => {
-  //보유 자산 가져오기
-  const query = 'SELECT user_wallet FROM user_account WHERE user_account=1000000001';
-  connection.query(query, (error, results) => {
-    if (error) {
-      console.error('Error executing query:', error);
-      res.status(500).send('Server Error');
-      return;
-    }
-    res.json(results[0]);
-  });
+    //보유 자산 가져오기
+    const query = 'SELECT user_wallet FROM user_account WHERE user_account=1000000001';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
 });
 
 // POST 요청 처리
 app.use(express.json());
+
+//  사용자 등록. 이름, 아이디, 패스워드, 생년월일, 이메일.
+app.post('/api/regist', (req, res) => {
+    const { user_name, user_id, user_passwd, user_birth, user_email } = req.body;
+
+    const query = 'INSERT INTO logins (user_name, user_id, user_passwd, user_birth, user_email) VALUES(?,?,?,?,?)';
+
+    connection.query(query, [user_name, user_id, user_passwd, user_birth, user_email], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        console.log('regist user');
+        res.status(200).json({ message: 'regist user' });
+    });
+});
+
+//  아이디 중복 체크. 중복 체크하지 않으면 회원가입 실패.
+app.post('/api/checkID', (req, res) => {
+    const checkID = req.body.user_id;
+    const check = { ischeck: '' };
+
+    const query = 'SELECT user_id FROM logins WHERE user_id = ?';
+
+    connection.query(query, [checkID], (error, result) => {
+        console.log(result);
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        if (result.length <= 0) {
+            check.ischeck = 'null';
+            res.send(check);
+        } else {
+            check.ischeck = 'exist';
+            res.send(check);
+        }
+    });
+});
+
+//  로그인
+app.post('/api/login', (req, res) => {
+    const loginID = req.body.user_id;
+    const loginPasswd = req.body.user_passwd;
+    const login = { islogin: '' };
+
+    console.log(loginID);
+    console.log(loginPasswd);
+
+    const query = 'SELECT * FROM logins WHERE user_id = ?';
+
+    connection.query(query, [loginID], (error, result) => {
+        console.log(result);
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        if (result.length > 0) {
+            console.log('ID ok');
+
+            if (loginPasswd === result[0].user_passwd) {
+                if (error) {
+                    console.error('Error executing query:', error);
+                    res.status(500).send('Server Error');
+                    return;
+                }
+
+                console.log('passwd ok');
+                login.islogin = 'ok';
+                res.send(login);
+            } else {
+                console.log('passwd fault');
+                login.islogin = 'fault';
+                res.send(login);
+            }
+        } else {
+            console.log('id fault');
+            login.islogin = 'fault';
+            res.send(login);
+        }
+    });
+});
 
 app.post('/api/invest', (req, res) => {
     const { investmentAmount, remainingBalance, buy_money } = req.body;
@@ -70,18 +157,17 @@ app.post('/api/invest', (req, res) => {
                 return res.status(500).json({ error: 'Failed to update my_stock' });
             }
 
-
             const query3 = 'UPDATE my_stock SET buy_money= buy_money + ? WHERE user_account=1000000001';
 
             connection.query(query3, [buy_money], (err, result2) => {
-            if (err) {
-                console.error('Error updating my_stock in MySQL:', err);
-                return res.status(500).json({ error: 'Failed to update my_stock' });
-            }
+                if (err) {
+                    console.error('Error updating my_stock in MySQL:', err);
+                    return res.status(500).json({ error: 'Failed to update my_stock' });
+                }
 
-            // 모든 업데이트가 성공하면 성공 메시지 반환
-            console.log('Investment saved successfully to MySQL');
-            res.status(200).json({ message: 'Investment saved successfully' });
+                // 모든 업데이트가 성공하면 성공 메시지 반환
+                console.log('Investment saved successfully to MySQL');
+                res.status(200).json({ message: 'Investment saved successfully' });
             });
         });
     });
@@ -106,7 +192,7 @@ app.post('/api/sell', (req, res) => {
         }
 
         // 트랜잭션 시작
-        connection.beginTransaction(err => {
+        connection.beginTransaction((err) => {
             if (err) {
                 console.error('트랜잭션 시작 중 오류 발생:', err);
                 return res.status(500).json({ error: '트랜잭션 시작에 실패했습니다.' });
@@ -123,7 +209,8 @@ app.post('/api/sell', (req, res) => {
                 }
 
                 // 두 번째 쿼리: my_stock 업데이트
-                const updateStockCountQuery = 'UPDATE my_stock SET stock_count = stock_count - ? WHERE user_account = 1000000001';
+                const updateStockCountQuery =
+                    'UPDATE my_stock SET stock_count = stock_count - ? WHERE user_account = 1000000001';
                 connection.query(updateStockCountQuery, [sellAmount], (err, result) => {
                     if (err) {
                         return connection.rollback(() => {
@@ -133,7 +220,8 @@ app.post('/api/sell', (req, res) => {
                     }
 
                     // 세 번째 쿼리: sellmoney 업데이트
-                    const updateSellMoneyQuery = 'UPDATE my_stock SET sell_money = sell_money + ? WHERE user_account = 1000000001';
+                    const updateSellMoneyQuery =
+                        'UPDATE my_stock SET sell_money = sell_money + ? WHERE user_account = 1000000001';
                     connection.query(updateSellMoneyQuery, [sellmoney], (err, result) => {
                         if (err) {
                             return connection.rollback(() => {
@@ -143,7 +231,7 @@ app.post('/api/sell', (req, res) => {
                         }
 
                         // 트랜잭션 커밋
-                        connection.commit(err => {
+                        connection.commit((err) => {
                             if (err) {
                                 return connection.rollback(() => {
                                     console.error('트랜잭션 커밋 중 오류 발생:', err);
@@ -160,8 +248,6 @@ app.post('/api/sell', (req, res) => {
         });
     });
 });
-
-
 
 // 사용자 정보를 반환하는 엔드포인트
 app.get('/api/username', (req, res) => {
@@ -228,7 +314,7 @@ app.get('/api/stockNames', (req, res) => {
         }
 
         // 주식 이름 배열을 클라이언트에 응답
-        const stockNames = rows.map(row => row.stock_name);
+        const stockNames = rows.map((row) => row.stock_name);
         //const stockNames = rows;
         res.json(stockNames);
     });
@@ -268,34 +354,32 @@ app.get('/api/buymoney/:stockId', (req, res) => {
 });
 
 app.get('/api/buymoney', (req, res) => {
-  // my_stock 테이블에서 buy_money와 sell_money 값을 가져오기 위한 쿼리
-  const query = 'SELECT buy_money, sell_money FROM my_stock WHERE user_account = 1000000001';
+    // my_stock 테이블에서 buy_money와 sell_money 값을 가져오기 위한 쿼리
+    const query = 'SELECT buy_money, sell_money FROM my_stock WHERE user_account = 1000000001';
 
-  connection.query(query, (error, results) => {
-    if (error) {
-      console.error('쿼리 실행 중 오류 발생:', error);
-      res.status(500).send('서버 오류');
-      return;
-    }
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('쿼리 실행 중 오류 발생:', error);
+            res.status(500).send('서버 오류');
+            return;
+        }
 
-    if (results.length === 0) {
-      // 결과가 없는 경우
-      res.status(404).send('데이터를 찾을 수 없습니다.');
-      return;
-    }
+        if (results.length === 0) {
+            // 결과가 없는 경우
+            res.status(404).send('데이터를 찾을 수 없습니다.');
+            return;
+        }
 
-    const buyMoney = results[0].buy_money;
-    const sellMoney = results[0].sell_money;
-    const difference = buyMoney - sellMoney;
+        const buyMoney = results[0].buy_money;
+        const sellMoney = results[0].sell_money;
+        const difference = buyMoney - sellMoney;
 
-    res.json({ buyMoney, sellMoney, difference });
-  });
+        res.json({ buyMoney, sellMoney, difference });
+    });
 });
 
-
-
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
 
 /*

@@ -7,6 +7,7 @@ import { stockDB } from '../../../data/stockDB';
 import { useLocation } from 'react-router-dom';
 
 export const Investment = () => {
+
     const [activeUnit, setActiveUnit] = useState('주'); // 초기 단위를 '주'로 설정
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
