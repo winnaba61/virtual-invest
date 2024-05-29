@@ -253,9 +253,6 @@ export const Investment = () => {
                     <div className="investment-title" id="stock-name">
                         {stockDetail.itmsNm}
                     </div>
-                    <div className="investment-title" id="stock-name">
-                        {stockDetail.itmsNm}
-                    </div>
                     <table className="investment-table">
                         <tr>
                             <th>현재가</th>
