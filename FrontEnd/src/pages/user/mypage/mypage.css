@@ -1,0 +1,128 @@
+.mypage {
+    color: var(--white);
+    width: 800px;
+    height: 72vh;
+}
+
+.mypage-title {
+    font-family: var(--font-1);
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.mypage-subtitle {
+    margin-left: 8px;
+}
+
+.mypage-info-table,
+.mypage-stocks-table,
+.mypage-stock-table {
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+}
+
+.mypage-info-table th {
+    border: 1px solid var(--white);
+    background-color: var(--blue);
+    width: 30%;
+    color: var(--black);
+}
+
+.mypage-stocks-table th {
+    border: 1px solid var(--white);
+    background-color: var(--blue);
+    width: 30%;
+    color: var(--black);
+}
+
+.mypage-stock-table th {
+    border: 1px solid var(--white);
+    background-color: var(--blue);
+    color: var(--black);
+    padding: 4px 0;
+}
+
+.mypage-info-table td {
+    border: 1px solid var(--white);
+    padding: 4px 0;
+    padding-left: 16px;
+}
+
+.mypage-stocks-table td {
+    border: 1px solid var(--white);
+    padding: 4px 0;
+    padding-left: 16px;
+}
+
+.mypage-stock-table td {
+    border: 1px solid var(--white);
+    padding: 4px 0;
+    text-align: center;
+}
+.mypage {
+    color: var(--white);
+    width: 800px;
+    margin-bottom: 80px;
+}
+
+.mypage-title {
+    font-family: var(--font-1);
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.mypage-subtitle {
+    margin-left: 8px;
+}
+
+.mypage-info-table,
+.mypage-stocks-table,
+.mypage-stock-table {
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+}
+
+.mypage-info-table th {
+    border: 1px solid var(--white);
+    background-color: var(--blue);
+    width: 30%;
+    color: var(--black);
+}
+
+.mypage-stocks-table th {
+    border: 1px solid var(--white);
+    background-color: var(--blue);
+    width: 30%;
+    color: var(--black);
+}
+
+.mypage-stock-table th {
+    border: 1px solid var(--white);
+    background-color: var(--blue);
+    color: var(--black);
+    padding: 4px 0;
+}
+
+.mypage-info-table td {
+    border: 1px solid var(--white);
+    padding: 4px 0;
+    padding-left: 16px;
+}
+
+.mypage-stocks-table td {
+    border: 1px solid var(--white);
+    padding: 4px 0;
+    padding-left: 16px;
+}
+
+.mypage-stock-table td {
+    border: 1px solid var(--white);
+    padding: 4px 0;
+    text-align: center;
+}

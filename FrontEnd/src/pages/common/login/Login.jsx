@@ -13,30 +13,29 @@ export const Login = () => {
             },
             body: JSON.stringify({
                 user_id: idRef.current.value,
-                user_passwd: passwordRef.current.value
+                user_passwd: passwordRef.current.value,
             }),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(response => {
-            if(response.islogin === "ok") {
-                console.log('login successful:');
-                alert('로그인 성공.');
-                window.location.href = 'http://localhost:5173/main';
-            }
-            else {
-                console.log('login failed:');
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((response) => {
+                if (response.islogin === 'ok') {
+                    console.log('login successful:');
+                    alert('로그인 성공.');
+                    window.location.href = 'http://localhost:5173/main';
+                } else {
+                    console.log('login failed:');
+                    alert('로그인 실패.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error checking:', error);
                 alert('로그인 실패.');
-            }
-        })
-        .catch(error => {
-            console.error('Error checking:', error);
-            alert('로그인 실패.');
-        });
+            });
     };
 
     return (
@@ -46,8 +45,8 @@ export const Login = () => {
                     소프트웨어 공학 팀프로젝트 -2조
                 </div>
                 <div className="login-title">로그인</div>
-                <input type="text" placeholder="ID" className="login-input" ref={idRef}/>
-                <input type="password" placeholder="PW" className="login-input" ref={passwordRef}/>
+                <input type="text" placeholder="ID" className="login-input" ref={idRef} />
+                <input type="password" placeholder="PW" className="login-input" ref={passwordRef} />
                 <button className="login-button" onClick={handleButtonClickLogin}>
                     로그인
                 </button>
