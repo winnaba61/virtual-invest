@@ -8,31 +8,26 @@
 
 ### 코드 실행 시, 주의사항
 
--   코드 실행 시, app.js 파일의 21line 인증키 입력하셔야 동작합니다.
 -   주식 정보 API는 https://www.data.go.kr/data/15094808/openapi.do 사용.
 
-### 결과 화면
+### trouble shooting
 
--   cmd에서 node app.js
+-   mySql data table 동기화 방법
 
-![1](https://github.com/hanejj/private-test/assets/165184750/d356ea51-c05d-46e8-b196-49ae34f0b5f4)
+BackEnd > config > config.json 에서 데이터 베이스 development 정보를 환경에 맞게 수정
 
--   localhost:3000
+npx sequelize db:create --env development	// 데이터 베이스에 이번 프로젝트에 필요한 스키마 생성
 
-![2](https://github.com/hanejj/private-test/assets/165184750/d7d7c5c9-12a8-4dd4-952d-80a05f43b7b4)
+npx sequelize-cli db:migrate	// 데이터 베이스에 이번 프로젝트에 필요한 테이블 생성
 
--   MySQL 데이터 확인
+-   backend server가 3000번 포트를 사용중이지 않음에도 3000번 포트를 사용하고 있다는 알림이 뜨면
 
-![3](https://github.com/hanejj/private-test/assets/165184750/41331488-9453-4d27-9e2c-efe103779486)
+BackEnd > bin > www를 열고 15번째 줄
 
-# 24.05.18 가상투자, 마이페이지 구현\_ver1(eunjin)
+var port = normalizePort(process.env.PORT || '3000');
 
-### 구현된 결과화면
+에서 '3000'을 쓰지 않는 임의의 포트로 바꾸고 저장 -> 3000번 포트와 임의의 포트 둘 다 열림
 
-![4](https://github.com/winnaba61/virtual-invest/assets/165184750/0c735478-211e-418a-ad4d-fd9ee2ac370b)
+-   BackEnd\app.js:6:24에서 MODULE_NOT_FOUND가 뜨는 경우
 
--   가상투자 예시 화면 (매수, 매도 정상 동작합니다.)
-
-![5](https://github.com/winnaba61/virtual-invest/assets/165184750/52170625-3048-451e-aeb7-01ef4161aa8d)
-
--   마이페이지 예시 화면 (수익률, 수익금액은 예시로 작성해둔 것입니다.)
+6번 줄을 주석처리 하거나 삭제
