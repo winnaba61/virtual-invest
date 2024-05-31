@@ -3,9 +3,12 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const mysql = require('mysql');
 const cors = require('cors');
+const { Connection } = require('./node_modules/mysql2/typings/mysql/lib/Connection');
 
 const app = express();
 const port = 3000;
+
+module.exports = app;
 
 // MySQL 연결
 const connection = mysql.createConnection({
@@ -43,6 +46,32 @@ app.get('/api/current-wallet', (req, res) => {
             return;
         }
         res.json(results[0]);
+    });
+});
+
+// board: 공지 게시글 제목만 가져오기
+app.get('/api/mBoardHeadlines', (req, res) => {
+    const query = 'SELECT id, author, title, createdAt as date FROM boards WHERE isNotice=1';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results);
+    });
+});
+
+// board: 일반 게시글 제목만 가져오기
+app.get('/api/boardHeadlines', (req, res) => {
+    const query = 'SELECT id, author, title, createdAt as date FROM boards WHERE isNotice=0';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results);
     });
 });
 
@@ -377,6 +406,62 @@ app.get('/api/buymoney', (req, res) => {
         res.json({ buyMoney, sellMoney, difference });
     });
 });
+
+// board: 글 등록하기
+app.put('/api/writeBoard', (req, res) => {
+    const query = 'INSERT INTO boards (author, title, content) VALUES(?,?,?)';
+    connection.query(query, [req.body.author, req.body.title, req.body.content], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        console.log('regist user');
+        res.status(201).json('success to insert the message');
+    });
+});
+
+// board: 글 조회하기
+app.get('/api/readBoard', (req, res) => {
+    const postId = req.query.id;
+    const query = 'SELECT author, title, content, createdAt as date FROM boards where id = ?'
+    connection.query(query, [postId], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
+});
+
+// board: 글 수정하기
+app.put('/api/modifyBoard', (req, res) => {
+    const query = 'UPDATE boards SET title = ?, content = ? WHERE id = ?';
+    connection.query(query, [req.body.title, req.body.content, req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        console.log('regist user');
+        res.status(201).json('success to modify with the message');
+    });
+});
+
+app.delete('/api/deleteBoard', (req, res) => {
+    const query = 'DELETE FROM boards WHERE id = ?';
+    connection.query(query, [req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        console.log('regist user');
+        res.status(201).json('success to delete the page');
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
