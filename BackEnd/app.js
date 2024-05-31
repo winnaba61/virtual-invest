@@ -3,7 +3,6 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const mysql = require('mysql');
 const cors = require('cors');
-const { Connection } = require('./node_modules/mysql2/typings/mysql/lib/Connection');
 
 const app = express();
 const port = 3000;

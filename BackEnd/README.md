@@ -27,7 +27,3 @@ BackEnd > bin > www를 열고 15번째 줄
 var port = normalizePort(process.env.PORT || '3000');
 
 에서 '3000'을 쓰지 않는 임의의 포트로 바꾸고 저장 -> 3000번 포트와 임의의 포트 둘 다 열림
-
--   BackEnd\app.js:6:24에서 MODULE_NOT_FOUND가 뜨는 경우
-
-6번 줄을 주석처리 하거나 삭제
