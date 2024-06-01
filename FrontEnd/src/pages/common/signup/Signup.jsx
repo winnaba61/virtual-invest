@@ -8,6 +8,7 @@ export const Signup = () => {
     const confirmPasswordRef = useRef(null);
     const birthdayRef = useRef(null);
     const emailRef = useRef(null);
+    const phoneRef = useRef(null); // 전화번호 입력에 대한 useRef 추가
 
     let checkID = 0;
 
@@ -53,6 +54,11 @@ export const Signup = () => {
             return;
         }
 
+        if (phoneRef.current.value == '') {
+            alert('전화번호를 입력하세요');
+            return;
+        }
+
         // database submit
         fetch('http://localhost:3000/api/regist', {
             method: 'POST',
@@ -65,6 +71,7 @@ export const Signup = () => {
                 user_passwd: passwordRef.current.value,
                 user_birth: birthdayRef.current.value,
                 user_email: emailRef.current.value,
+                user_phone: phoneRef.current.value, // 전화번호 추가
             }),
         })
             .then((response) => {
@@ -125,7 +132,7 @@ export const Signup = () => {
                 <div className="signup-title">회원가입</div>
                 <input type="text" placeholder="이름" className="signup-input" ref={nameRef} />
                 <div>
-                    <input type="text" placeholder="ID" className="check-input" ref={idRef} />
+                    <input type="text" placeholder="계좌 번호" className="check-input" ref={idRef} />
                     <button className="check-button" onClick={handleButtonClickCheckID}>
                         중복 체크
                     </button>
@@ -134,6 +141,7 @@ export const Signup = () => {
                 <input type="password" placeholder="PW 확인" className="signup-input" ref={confirmPasswordRef} />
                 <input type="text" placeholder="생년월일 (YYYYMMDD)" className="signup-input" ref={birthdayRef} />
                 <input type="text" placeholder="이메일" className="signup-input" ref={emailRef} />
+                <input type="text" placeholder="전화번호" className="signup-input" ref={phoneRef} /> {/* 전화번호 입력 추가 */}
                 <button className="signup-button" onClick={handleButtonClickSignup}>
                     회원가입
                 </button>
