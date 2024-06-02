@@ -14,7 +14,7 @@ const csvFilePath6 = path.resolve('./이스트아시아홀딩스_DB.csv');
 const csvDirectoryPath = path.resolve('./24.05.22_각주식_거래량추가_100개');
 
 // 저장할 디렉토리 경로를 정의합니다.
-const outputDirectoryPath = path.resolve('./stockInfo');
+const outputDirectoryPath = path.resolve('./stocks');
 
 // CSV 파일을 JSON 파일로 변환하는 함수
 const convertCSVtoJSON = (csvFilePath, outputFileName) => {

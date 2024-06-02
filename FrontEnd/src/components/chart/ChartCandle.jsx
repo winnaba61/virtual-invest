@@ -10,8 +10,10 @@ import {
     CartesianGrid,
     Cell,
 } from 'recharts';
-import { dummyData } from '../../data/dummyData';
+import * as stocks from '../../data/stocks'; // stocks 디렉토리의 모든 파일을 가져옴
 import './chartCandle.css';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -30,7 +32,12 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 export const ChartCandle01 = ({ title, data }) => {
-    const reversedData = [...dummyData].reverse(); // 데이터를 뒤집습니다.
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const itmNm = searchParams.get('itmsNm');
+    const stockData = stocks[itmNm]; // itmNm에 해당하는 주식 데이터 가져오기
+
+    const reversedData = [...stockData].reverse(); // 데이터를 뒤집습니다.
     const firstDataAvg = (reversedData[0].mkp + reversedData[0].clpr) / 2;
     const minLowest = Math.min(...reversedData.map((entry) => entry.lopr));
     const maxHighest = Math.max(...reversedData.map((entry) => entry.hipr));
@@ -58,7 +65,12 @@ export const ChartCandle01 = ({ title, data }) => {
 };
 
 export const ChartCandle02 = ({ title, data }) => {
-    const reversedData = [...dummyData].reverse(); // 데이터를 뒤집습니다.
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const itmNm = searchParams.get('itmsNm');
+    const stockData = stocks[itmNm]; // itmNm에 해당하는 주식 데이터 가져오기
+
+    const reversedData = [...stockData].reverse(); // 데이터를 뒤집습니다.
     const firstDataAvg = (reversedData[0].mkp + reversedData[0].clpr) / 2;
     const minLowest = Math.min(...reversedData.map((entry) => entry.lopr));
     const maxHighest = Math.max(...reversedData.map((entry) => entry.hipr));

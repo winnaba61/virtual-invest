@@ -40,7 +40,7 @@ export const Topbar = () => {
                         <Link to="/mypage">마이페이지</Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/stockInfo' ? 'active' : ''}`}>
-                        <Link to="/stockInfo">주식 상세정보</Link>
+                        <Link to="/stockInfo?itmsNm=두산">주식 상세정보</Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/search' ? 'active' : ''}`}>
                         <Link to="/search">검색</Link>

@@ -2,28 +2,32 @@ import './stockInfo.css';
 import { Topbar } from '../../../components/topbar/Topbar';
 import { stockDB } from '../../../data/stockDB';
 import { useLocation } from 'react-router-dom';
-import { ChartLine } from '../../../components/chart/ChartLine';
+import { ChartLineURL } from '../../../components/chart/ChartLine';
 import { ChartCandle01, ChartCandle02 } from '../../../components/chart/ChartCandle';
-import { dummyData } from '../../../data/dummyData';
 import { ChartBar } from '../../../components/chart/ChartBar';
 
 export const StockInfo = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const stockId = searchParams.get('id') || '1'; // 기본값으로 '1'을 사용
+    const stockName = searchParams.get('itmsNm') || '두산'; // 기본값을 빈 문자열로 설정
 
     // '매수' 버튼 클릭 시 실행되는 함수
     const handleButtonClickBuy = () => {
-        // 현재 주식 ID를 사용하여 투자 페이지로 리다이렉트
-        window.location.href = `http://localhost:5173/investment?stockId=${stockId}`;
-    };
-    // '매도' 버튼 클릭 시 실행되는 함수
-    const handleButtonClickSell = () => {
-        // 현재 주식 ID를 사용하여 투자 페이지로 리다이렉트
-        window.location.href = `http://localhost:5173/investment?stockId=${stockId}`;
+        // 현재 주식 종목명을 사용하여 투자 페이지로 리다이렉트
+        window.location.href = `http://localhost:5173/investment?stockName=${stockName}`;
     };
 
-    const stockDetail = stockDB.find((stock) => stock.id === stockId);
+    // '매도' 버튼 클릭 시 실행되는 함수
+    const handleButtonClickSell = () => {
+        // 현재 주식 종목명을 사용하여 투자 페이지로 리다이렉트
+        window.location.href = `http://localhost:5173/investment?stockName=${stockName}`;
+    };
+
+    const stockDetail = stockDB.find((stock) => stock.itmsNm === stockName);
+
+    if (!stockDetail) {
+        return <div>해당 종목명을 찾을 수 없습니다: {stockName}</div>;
+    }
 
     return (
         <>
@@ -56,19 +60,19 @@ export const StockInfo = () => {
                     <div className="stockinfo-line" />
                     <div className="stockinfo-chart-container">
                         <div className="stockinfo-chart">
-                            <ChartLine id={stockId} />
+                            <ChartLineURL itmsNm={stockName} />
                         </div>
                         <div className="stockinfo-chart" id="bar">
-                            <ChartBar data={dummyData} />
+                            <ChartBar />
                         </div>
                         <div className="stockinfo-chart" id="candle">
-                            <ChartCandle02 data={dummyData} />
+                            <ChartCandle02 />
                         </div>
                         <div className="stockinfo-chart">
-                            <ChartCandle01 data={dummyData} />
+                            <ChartCandle01 />
                         </div>
                         <div className="stockinfo-chart" id="bar">
-                            <ChartBar data={dummyData} />
+                            <ChartBar />
                         </div>
                     </div>
                     <div className="stockinfo-pagination">

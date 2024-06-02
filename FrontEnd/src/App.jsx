@@ -4,7 +4,7 @@ import './assets/font.css';
 
 import { Login } from './pages/common/login/Login';
 import { Signup } from './pages/common/signup/Signup';
-import { Account } from './pages/manager/account/Account';
+import { AccountM } from './pages/manager/account/AccountM';
 import { BoardM } from './pages/manager/board/BoardM';
 import { Board } from './pages/user/board/Board';
 import { Write } from './pages/user/board/Write';
@@ -27,7 +27,7 @@ function App() {
                         <Route path="/signup" element={<Signup />} />
 
                         {/* 관리자 */}
-                        <Route path="/manager/account" element={<Account />} />
+                        <Route path="/manager/account" element={<AccountM />} />
                         <Route path="/manager/board" element={<BoardM />} />
 
                         {/* 사용자 */}
