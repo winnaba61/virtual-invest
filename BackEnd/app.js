@@ -13,8 +13,8 @@ module.exports = app;
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'MySQLpass',
-    database: 'swe',
+    password: '1234',
+    database: 'project3',
 });
 
 connection.connect();
@@ -48,9 +48,21 @@ app.get('/api/current-wallet', (req, res) => {
     });
 });
 
-
+// 관리자인지 여부를 확인
+// 요청 형식: ~/api/admin?id=(getLoginId로 얻어온 key)
 app.get('/api/admin', (req, res) => {
-    const query = 'SELECT user_admin FROM user_loginInfo';
+    const query = 'SELECT user_admin FROM logins WHERE id=?';
+    connection.query(query, [req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
+    
+});
+
 // board: 공지 게시글 제목만 가져오기
     app.get('/api/mBoardHeadlines', (req, res) => {
         const query = 'SELECT id, author, title, createdAt as date FROM boards WHERE isNotice=1';
@@ -122,11 +134,11 @@ app.post('/api/checkID', (req, res) => {
     });
 });
 
-app.post('/api/loginInfo', (req, res) => {
+app.post('/api/setLoginInfo', (req, res) => {
     const userID = req.body.user_id;
     const check = { ischeck: '' };
 
-    const query1 = 'SELECT user_id, user_admin FROM logins WHERE user_id = ?';
+    const query1 = 'SELECT id FROM logins WHERE user_id = ?';
 
     connection.query(query1, [userID], (error, result) => {
         console.log(result);
@@ -136,20 +148,50 @@ app.post('/api/loginInfo', (req, res) => {
             return;
         }
 
-        const query2 = 'INSERT INTO user_loginInfo (user_id, user_admin) VALUES(?,?)';
+        const query2 = 'INSERT INTO user_loginInfo (user_key, tokenKey) VALUES(?,?)';
+        const tokenVal = Math.floor(Math.random() * 0x7FFFFFFF)
 
-        connection.query(query2, [result[0].user_id, result[0].user_admin], (error, results) => {
+        connection.query(query2, [result[0].id, tokenVal], (error, results) => {
             if (error) {
                 console.error('Error executing query:', error);
                 res.status(500).send('Server Error');
                 return;
             }
             console.log('regist user');
-            res.status(200).json({ message: 'set login info' });
+            res.status(200).json({ message: 'set login info', token: tokenVal });
         });
     });
 });
 
+app.post('/api/getLoginId', (req, res) => {
+    const query1 = 'DELETE FROM user_loginInfo WHERE createdAt < DATE_SUB(NOW(), INTERVAL 1 HOUR)'; //1시간 지나면 로그인 정보 삭제
+    const query2 = 'SELECT user_key FROM user_loginInfo WHERE tokenKey = ?';
+
+    // 우선 한시간 지난 로그인 정보 삭제
+    connection.query(query1, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        console.log(results);
+
+        // 받은 토큰을 가지고 id로 변환 후 반환
+        connection.query(query2, [req.body.token], (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Server Error');
+                return;
+            }
+
+            if (results.length > 0) {
+                res.status(200).json(results[0]);
+            } else {
+                res.status(404).json({ message: 'Login info not found' });
+            }
+        });
+    });
+});
 //  로그인
 app.post('/api/login', (req, res) => {
     const loginID = req.body.user_id;

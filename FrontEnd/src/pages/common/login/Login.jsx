@@ -6,7 +6,7 @@ export const Login = () => {
     const passwordRef = useRef(null);
 
     const setLoginInfo = () => {
-        fetch('http://localhost:3000/api/loginInfo', {
+        fetch('http://localhost:3000/api/setLoginInfo', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +22,8 @@ export const Login = () => {
                 return response.json();
             })
             .then((response) => {
-                console.log('set login info');
+                sessionStorage.setItem('token', response.token);
+                console.log('set login token: ' + response.token);
             })
             .catch((error) => {
                 console.error('Error checking:', error);

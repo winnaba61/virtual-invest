@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './topbar.css';
+//import { response } from '../../../../BackEnd/app';
 
 export const Topbar = () => {
     const [activePage, setActivePage] = useState('');
@@ -15,23 +16,41 @@ export const Topbar = () => {
 
     useEffect(() => {
         // 컴포넌트가 마운트될 때 관리자 상태를 가져옴
-        fetch('http://localhost:3000/api/admin')
+        fetch('http://localhost:3000/api/getLoginId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: sessionStorage.getItem('token'),
+            }),
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then((admin) => {
-                console.log('관리자 상태를 가져왔습니다.');
-                setIsAdmin(admin);
+            .then((data) => {
+                fetch(`http://localhost:3000/api/admin?id=${data.user_key}`)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then((admin) => {
+                        console.log('관리자 상태를 가져왔습니다.');
+                        setIsAdmin(admin.user_admin);
+                    })
+                    .catch((error) => {
+                        console.error('관리자 상태를 가져오는 중 오류 발생:', error);
+                    });
             })
             .catch((error) => {
-                console.error('관리자 상태를 가져오는 중 오류 발생:', error);
+                console.error('로그인 ID를 가져오는 중 오류 발생:', error);
             });
-    }, []);
-
-    const handleBoardClick = () => {
+    }, []);    const handleBoardClick = () => {
         if (isAdmin === null) {
             console.log('관리자 상태를 확인 중입니다.');
             return;
@@ -40,10 +59,10 @@ export const Topbar = () => {
         console.log('게시판 클릭');
         if (isAdmin === 1) {
             console.log('사용자가 관리자입니다');
-            navigate('/manager/board');
+            window.location.href = '/manager/board';
         } else if (isAdmin === 0) {
             console.log('사용자가 관리자가 아닙니다');
-            navigate('/board');
+            window.location.href = '/board';
         }
     };
 
