@@ -11,8 +11,8 @@ const port = 3000;
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
-    database: 'project3',
+    password: 'MySQLpass',
+    database: 'swe',
 });
 
 connection.connect();
@@ -46,16 +46,28 @@ app.get('/api/current-wallet', (req, res) => {
     });
 });
 
+app.get('/api/admin', (req, res) => {
+    const query = 'SELECT user_admin FROM user_loginInfo';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results);
+    });
+});
+
 // POST 요청 처리
 app.use(express.json());
 
 //  사용자 등록. 이름, 아이디, 패스워드, 생년월일, 이메일.
 app.post('/api/regist', (req, res) => {
-    const { user_name, user_id, user_passwd, user_birth, user_email } = req.body;
+    const { user_name, user_id, user_passwd, user_birth, user_email, user_admin } = req.body;
 
-    const query = 'INSERT INTO logins (user_name, user_id, user_passwd, user_birth, user_email) VALUES(?,?,?,?,?)';
+    const query = 'INSERT INTO logins (user_name, user_id, user_passwd, user_birth, user_email, user_admin) VALUES(?,?,?,?,?,?)';
 
-    connection.query(query, [user_name, user_id, user_passwd, user_birth, user_email], (error, results) => {
+    connection.query(query, [user_name, user_id, user_passwd, user_birth, user_email, user_admin], (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).send('Server Error');
@@ -88,6 +100,34 @@ app.post('/api/checkID', (req, res) => {
             check.ischeck = 'exist';
             res.send(check);
         }
+    });
+});
+
+app.post('/api/loginInfo', (req, res) => {
+    const userID = req.body.user_id;
+    const check = { ischeck: '' };
+
+    const query1 = 'SELECT user_id, user_admin FROM logins WHERE user_id = ?';
+
+    connection.query(query1, [userID], (error, result) => {
+        console.log(result);
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        const query2 = 'INSERT INTO user_loginInfo (user_id, user_admin) VALUES(?,?)';
+
+        connection.query(query2, [result[0].user_id, result[0].user_admin], (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Server Error');
+                return;
+            }
+            console.log('regist user');
+            res.status(200).json({ message: 'set login info' });
+        });
     });
 });
 
@@ -378,9 +418,13 @@ app.get('/api/buymoney', (req, res) => {
     });
 });
 
+module.exports = app;
+
+/*
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+*/
 
 /*
 // API 요청 보내기

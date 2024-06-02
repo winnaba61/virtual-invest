@@ -5,6 +5,30 @@ export const Login = () => {
     const idRef = useRef(null);
     const passwordRef = useRef(null);
 
+    const setLoginInfo = () => {
+        fetch('http://localhost:3000/api/loginInfo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: idRef.current.value,
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((response) => {
+                console.log('set login info');
+            })
+            .catch((error) => {
+                console.error('Error checking:', error);
+            });
+    }
+
     const handleButtonClickLogin = () => {
         fetch('http://localhost:3000/api/login', {
             method: 'POST',
@@ -26,6 +50,7 @@ export const Login = () => {
                 if (response.islogin === 'ok') {
                     console.log('login successful:');
                     alert('로그인 성공.');
+                    setLoginInfo();
                     window.location.href = 'http://localhost:5173/main';
                 } else {
                     console.log('login failed:');

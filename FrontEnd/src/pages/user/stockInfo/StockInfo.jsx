@@ -56,7 +56,7 @@ export const StockInfo = () => {
                     <div className="stockinfo-line" />
                     <div className="stockinfo-chart-container">
                         <div className="stockinfo-chart">
-                            <ChartLine id={stockId} title="라인그래프" />
+                            <ChartLine id={stockId} />
                         </div>
                         <div className="stockinfo-chart" id="bar">
                             <ChartBar data={dummyData} />
