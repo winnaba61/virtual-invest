@@ -1,6 +1,7 @@
 .search {
     width: 800px;
     height: 72vh;
+    margin-bottom: 60px;
 }
 
 .search-title {
@@ -8,7 +9,7 @@
     font-family: var(--font-1);
     font-size: 20px;
     margin-bottom: 16px;
-    color: var(--white);
+    color: var(--green);
     align-items: end;
 }
 

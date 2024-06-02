@@ -5,7 +5,7 @@
 
 .investment-title {
     font-family: var(--font-1);
-    color: var(--white);
+    color: var(--green);
     font-size: 20px;
     margin-bottom: 16px;
 }
@@ -17,7 +17,6 @@
 
 .investment-table {
     width: 100%;
-    height: 120px;
     border: none;
     border-collapse: collapse;
 }
@@ -26,6 +25,7 @@
     border: 1px solid var(--white);
     background-color: var(--blue);
     width: 200px;
+    height: 32px;
 }
 
 .investment-table td {
