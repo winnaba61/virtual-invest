@@ -7,35 +7,21 @@ export const View = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get("id");
-    const boardNo = queryParams.get("board");
 
     const [post, setPost] = useState(null);
 
     useEffect(() => {
-        if (!boardNo)
-        fetch('http://localhost:3001/boards')
+        //fetch('http://localhost:3001/Mboard')
+        fetch('http://localhost:3000/api/readBoard?id='+postId)
             .then(response => response.json())
-            .then(data => {
-                const foundPost = data.find(item => item.id == postId);
-                setPost(foundPost);
-            });
-        else
-            fetch('http://localhost:3001/Mboard')
-                .then(response => response.json())
-                .then(data => {
-                    const foundPost = data.find(item => item.id == postId);
-                    setPost(foundPost);
-                });
+            .then(data => setPost(data));
     }, [postId]);
 
     const handleButtonClickBoard = () => {
         window.location.href = '/board';
     };
     const handleButtonClickModify = () => {
-        if (!boardNo)
-            window.location.href = '/board/modify?id=' + postId;
-        else
-            window.location.href = '/board/modify?id=' + postId + '&board=' + boardNo; 
+        window.location.href = '/board/modify?id=' + postId;
     };
 
     if (!post) {
@@ -47,9 +33,6 @@ export const View = () => {
                     <div className="view-pagination">
                         <button className="view-pagination-button" onClick={handleButtonClickBoard}>
                             목록
-                        </button>
-                        <button className="view-pagination-button" onClick={handleButtonClickModify}>
-                            수정하기
                         </button>
                     </div>
                 </div>
@@ -63,7 +46,7 @@ export const View = () => {
             <div className="view">
                 <div className="view-date">
                     <div id="title">작성일</div>
-                    {post.date}
+                    {post.date.split('T')[0]}
                 </div>
                 <div className="view-author">
                     <div id="title">작성자</div>

@@ -12,8 +12,9 @@ export const Write = () => {
             return;
         }
 
-        fetch('http://localhost:3001/boards', {
-            method: 'POST',
+        //fetch('http://localhost:3001/boards', {
+        fetch('http://localhost:3000/api/writeBoard', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -21,7 +22,6 @@ export const Write = () => {
                 title,
                 content,
                 author: '작성자',
-                date: new Date().toISOString().split('T')[0],
             }),
         })
             .then(response => response.json())
