@@ -21,7 +21,6 @@ export const Board = () => {
     }, []);
 
     const handleButtonClickWrite = () => {
-        //window.location.href = 'http://localhost:5173/board/write';
         window.location.href = '/board/write';
     };
 
@@ -76,7 +75,7 @@ export const Board = () => {
                             ? Mcontents.map((post, index) => (
                                   <tr key={post.id}>
                                       <td id="post-number">
-                                          <a href={`/board/view?id=${post.id}`}>{Mcontents.length - index}</a>
+                                          <a href={`/board/view?id=${post.id}`}>공지</a>
                                       </td>
                                       <td id="post-title">
                                           <a href={`/board/view?id=${post.id}`}>{post.title}</a>

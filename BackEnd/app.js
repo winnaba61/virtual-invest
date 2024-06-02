@@ -3,6 +3,7 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const mysql = require('mysql');
 const cors = require('cors');
+const { token } = require('morgan');
 
 const app = express();
 const port = 3000;
@@ -61,6 +62,20 @@ app.get('/api/admin', (req, res) => {
         res.json(results[0]);
     });
     
+});
+
+// 관리자인지 여부를 확인
+// 요청 형식: ~/api/admin?id=(getLoginId로 얻어온 key)
+app.get('/api/userName', (req, res) => {
+    const query = 'SELECT user_name FROM logins WHERE id=?';
+    connection.query(query, [req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
 });
 
 // board: 공지 게시글 제목만 가져오기
@@ -136,29 +151,34 @@ app.post('/api/checkID', (req, res) => {
 
 app.post('/api/setLoginInfo', (req, res) => {
     const userID = req.body.user_id;
-    const check = { ischeck: '' };
 
-    const query1 = 'SELECT id FROM logins WHERE user_id = ?';
+    const query0 = 'SELECT id FROM logins WHERE user_id = ?';
+    const query1 = 'DELETE FROM user_loginInfo WHERE user_key = ?'
+    const query2 = 'INSERT INTO user_loginInfo (user_key, tokenKey) VALUES(?,?)';
 
-    connection.query(query1, [userID], (error, result) => {
-        console.log(result);
+    connection.query(query0, [userID], (error, result) => {
+        const userKey = result[0].id;
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).send('Server Error');
             return;
         }
-
-        const query2 = 'INSERT INTO user_loginInfo (user_key, tokenKey) VALUES(?,?)';
-        const tokenVal = Math.floor(Math.random() * 0x7FFFFFFF)
-
-        connection.query(query2, [result[0].id, tokenVal], (error, results) => {
+        connection.query(query1, [userKey], (error, result) => {
             if (error) {
                 console.error('Error executing query:', error);
                 res.status(500).send('Server Error');
                 return;
             }
-            console.log('regist user');
-            res.status(200).json({ message: 'set login info', token: tokenVal });
+            const tokenVal = Math.floor(Math.random() * 0x7FFFFFFF);
+            connection.query(query2, [userKey, tokenVal], (error, results) => {
+                if (error) {
+                    console.error('Error executing query:', error);
+                    res.status(500).send('Server Error');
+                    return;
+                }
+                console.log(userID +' is loged in with ' + tokenVal);
+                res.status(200).json({ message: 'set login info', token: tokenVal });
+            });
         });
     });
 });
@@ -174,7 +194,6 @@ app.post('/api/getLoginId', (req, res) => {
             res.status(500).send('Server Error');
             return;
         }
-        console.log(results);
 
         // 받은 토큰을 가지고 id로 변환 후 반환
         connection.query(query2, [req.body.token], (error, results) => {
@@ -483,14 +502,13 @@ module.exports = app;
 
 // board: 글 등록하기
 app.put('/api/writeBoard', (req, res) => {
-    const query = 'INSERT INTO boards (author, title, content) VALUES(?,?,?)';
-    connection.query(query, [req.body.author, req.body.title, req.body.content], (error, results) => {
+    const query = 'INSERT INTO boards (author, title, content, login_id) VALUES(?,?,?,?)';
+    connection.query(query, [req.body.author, req.body.title, req.body.content, req.body.login_id], (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).send('Server Error');
             return;
         }
-        console.log('regist user');
         res.status(201).json('success to insert the message');
     });
 });
@@ -498,7 +516,7 @@ app.put('/api/writeBoard', (req, res) => {
 // board: 글 조회하기
 app.get('/api/readBoard', (req, res) => {
     const postId = req.query.id;
-    const query = 'SELECT author, title, content, createdAt as date FROM boards where id = ?'
+    const query = 'SELECT author, title, content, createdAt as date, login_id FROM boards where id = ?'
     connection.query(query, [postId], (error, results) => {
         if (error) {
             console.error('Error executing query:', error);

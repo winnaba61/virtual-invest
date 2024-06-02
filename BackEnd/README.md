@@ -43,6 +43,8 @@ npx sequelize db:create --env development	// 데이터 베이스에 이번 프�
 
 npx sequelize-cli db:migrate	// 데이터 베이스에 이번 프로젝트에 필요한 테이블 생성
 
+npx sequelize-cli db:migrate:undo:all // 생성한 테이블 삭제
+
 -   backend server가 3000번 포트를 사용중이지 않음에도 3000번 포트를 사용하고 있다는 알림이 뜨면
 
 BackEnd > bin > www를 열고 15번째 줄

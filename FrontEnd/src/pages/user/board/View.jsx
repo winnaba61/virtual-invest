@@ -9,19 +9,44 @@ export const View = () => {
     const postId = queryParams.get("id");
 
     const [post, setPost] = useState(null);
+    const [userKey, setUserKey] = useState(-1);
 
     useEffect(() => {
         //fetch('http://localhost:3001/Mboard')
         fetch('http://localhost:3000/api/readBoard?id='+postId)
             .then(response => response.json())
             .then(data => setPost(data));
+
+        fetch('http://localhost:3000/api/getLoginId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: sessionStorage.getItem('token'),
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => setUserKey(data.user_key))
+            .catch((error) => {
+                console.error('로그인 ID를 가져오는 중 오류 발생:', error);
+            });
+
     }, [postId]);
 
     const handleButtonClickBoard = () => {
         window.location.href = '/board';
     };
     const handleButtonClickModify = () => {
-        window.location.href = '/board/modify?id=' + postId;
+        if (userKey === post.login_id)
+            window.location.href = '/board/modify?id=' + postId;
+        else
+            alert("수정 권한이 없습니다");
     };
 
     if (!post) {

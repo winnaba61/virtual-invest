@@ -8,6 +8,9 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+        },
+      login_id: {
+        type: Sequelize.INTEGER
       },
       author: {
           type: Sequelize.STRING

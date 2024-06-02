@@ -40,3 +40,13 @@
 .topbar-menu.active {
     color: var(--blue);
 }
+
+.topbar-button {
+    font-family: var(--font-1);
+    color: var(--white);
+    background-color: var(--background-color);
+}
+
+.topbar-button.active {
+    color: var(--blue);
+}

@@ -7,7 +7,7 @@ export const Topbar = () => {
     const [activePage, setActivePage] = useState('');
     const [isAdmin, setIsAdmin] = useState(null); 
     const location = useLocation();
-    const navigate = useNavigate();
+    
 
     useEffect(() => {
         // useLocation의 pathname을 기반으로 현재 페이지 설정
@@ -49,8 +49,11 @@ export const Topbar = () => {
             })
             .catch((error) => {
                 console.error('로그인 ID를 가져오는 중 오류 발생:', error);
+                alert("로그인 에러가 발생했습니다. 다시 로그인 해주세요.");
+                window.location.href = '/';
             });
-    }, []);    const handleBoardClick = () => {
+    }, []);
+    const handleBoardClick = () => {
         if (isAdmin === null) {
             console.log('관리자 상태를 확인 중입니다.');
             return;
@@ -78,17 +81,14 @@ export const Topbar = () => {
                     <li className={`topbar-menu ${activePage === '/investment' ? 'active' : ''}`}>
                         <Link to="/investment">가상투자</Link>
                     </li>
-                    <li
-                        className={`topbar-menu ${
-                            activePage === '/board' ||
-                            activePage === '/board/view' ||
-                            activePage === '/board/modify' ||
-                            activePage === '/board/write'
+                    <li className="topbar-menu">
+                        <button onClick={handleBoardClick} className={`topbar-button ${activePage === '/board' ||
+                                activePage === '/board/view' ||
+                                activePage === '/board/modify' ||
+                                activePage === '/board/write'
                                 ? 'active'
-                                : ''
-                        }`}
-                    >
-                        <button onClick={handleBoardClick} className="topbar-button">게시판</button>
+                            : ''
+                                }`}>게시판</button>
                     </li>
                     <li className={`topbar-menu ${activePage === '/mypage' ? 'active' : ''}`}>
                         <Link to="/mypage">마이페이지</Link>
