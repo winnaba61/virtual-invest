@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import React from 'react';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { useLocation } from 'react-router-dom';
 import './chartLine.css';
 import * as stocks from '../../data/stocks'; // stocks 디렉토리의 모든 파일을 가져옴
-import { stockDB } from '../../data/stockDB';
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -27,8 +26,11 @@ export const ChartLineURL = ({ title }) => {
     const itmNm = searchParams.get('itmsNm');
     const stockData = stocks[itmNm]; // itmNm에 해당하는 주식 데이터 가져오기
 
+    if (!stockData) {
+        return <div>No data available</div>;
+    }
+
     const reversedData = [...stockData].reverse();
-    const firstDataAvg = (reversedData[0]?.mkp + reversedData[0]?.clpr) / 2;
     const minLowest = Math.min(...reversedData.map((entry) => entry?.lopr || 0));
     const maxHighest = Math.max(...reversedData.map((entry) => entry?.hipr || 0));
     const length = reversedData.length;
@@ -44,7 +46,7 @@ export const ChartLineURL = ({ title }) => {
                     <Line
                         type="linear"
                         dataKey="clpr"
-                        stroke={reversedData[length - 1].clpr > reversedData[length - 2].clpr ? '#E94560' : '#006DEE'}
+                        stroke={reversedData[length - 1].clpr > reversedData[length - 2].clpr ? '#FF3B30' : '#007AFF'}
                         dot={false}
                         activeDot={{ r: 8 }}
                     />
@@ -57,8 +59,11 @@ export const ChartLineURL = ({ title }) => {
 export const ChartLine = ({ data }) => {
     const stockData = stocks[data];
 
+    if (!stockData) {
+        return <div>No data available</div>;
+    }
+
     const reversedData = [...stockData].reverse();
-    const firstDataAvg = (reversedData[0]?.mkp + reversedData[0]?.clpr) / 2;
     const minLowest = Math.min(...reversedData.map((entry) => entry?.lopr || 0));
     const maxHighest = Math.max(...reversedData.map((entry) => entry?.hipr || 0));
     const length = reversedData.length;
@@ -74,7 +79,7 @@ export const ChartLine = ({ data }) => {
                     <Line
                         type="linear"
                         dataKey="clpr"
-                        stroke={reversedData[length - 1].clpr > reversedData[length - 2].clpr ? '#E94560' : '#006DEE'}
+                        stroke={reversedData[length - 1].clpr > reversedData[length - 2].clpr ? '#FF3B30' : '#007AFF'}
                         dot={false}
                         activeDot={{ r: 8 }}
                     />

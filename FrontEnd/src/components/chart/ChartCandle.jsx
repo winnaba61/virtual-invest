@@ -55,7 +55,7 @@ export const ChartCandle01 = ({ title, data }) => {
                     <Tooltip content={CustomTooltip} />
                     <Bar dataKey={(data) => [data.mkp, data.clpr]}>
                         {reversedData.map((data, index) => (
-                            <Cell key={index} fill={data.mkp - data.clpr > 0 ? '#E94560' : '#006DEE'} />
+                            <Cell key={index} fill={data.mkp - data.clpr > 0 ? '#FF3B30' : '#007AFF'} />
                         ))}
                     </Bar>
                 </BarChart>

@@ -3,12 +3,6 @@ import fs from 'fs';
 import path from 'path';
 
 // 개별 CSV 파일의 경로를 정의합니다.
-const csvFilePath1 = path.resolve('./주식DB_100개.csv');
-const csvFilePath2 = path.resolve('./bulletin_board.csv');
-const csvFilePath3 = path.resolve('./my_stock.csv');
-const csvFilePath4 = path.resolve('./user_info.csv');
-const csvFilePath5 = path.resolve('./user_stock.csv');
-const csvFilePath6 = path.resolve('./이스트아시아홀딩스_DB.csv');
 
 // 여러 CSV 파일이 들어있는 디렉토리를 정의합니다.
 const csvDirectoryPath = path.resolve('./24.05.22_각주식_거래량추가_100개');
@@ -28,12 +22,6 @@ const convertCSVtoJSON = (csvFilePath, outputFileName) => {
 };
 
 // 개별 CSV 파일을 변환합니다.
-convertCSVtoJSON(csvFilePath1, 'stockDB.js');
-convertCSVtoJSON(csvFilePath2, 'bulletinBoard.js');
-convertCSVtoJSON(csvFilePath3, 'myStock.js');
-convertCSVtoJSON(csvFilePath4, 'userInfo.js');
-convertCSVtoJSON(csvFilePath5, 'userStock.js');
-convertCSVtoJSON(csvFilePath6, 'dummyData.js');
 
 // 디렉토리를 읽고 그 안의 각 CSV 파일을 변환합니다.
 fs.readdir(csvDirectoryPath, (err, files) => {

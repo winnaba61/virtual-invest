@@ -39,10 +39,15 @@ export const ChartBar = ({ title }) => {
         <div className="chartBar">
             <ResponsiveContainer>
                 <BarChart data={reversedData}>
-                    <XAxis dataKey="basDt" tickFormatter={formatDate} />
+                    <XAxis
+                        dataKey="basDt"
+                        tickFormatter={formatDate}
+                        axisLine={{ stroke: 'white' }}
+                        tick={{ fill: 'white' }}
+                    />
                     <YAxis domain={[minLowest, maxHighest]} hide={true} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="clpr" fill="gray" />
+                    <Bar dataKey="clpr" fill="#A6A6A6" />
                 </BarChart>
             </ResponsiveContainer>
         </div>

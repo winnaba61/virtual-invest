@@ -5,27 +5,27 @@
 
 .main-tutorial {
     margin-bottom: 40px;
-    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid var(--white);
     padding: 40px;
     border-radius: 8px;
+    color: var(--white);
 }
 
+.main-tutorial-title {
+    font-size: 20px;
+    font-family: var(--font-1);
+}
 .main-tutorial div {
     margin-bottom: 8px;
 }
 
-.main-tutorial-title {
-    color: var(--green);
-    font-size: 20px;
-    font-family: var(--font-1);
-}
-
 .tutorial-warning {
-    color: red;
+    color: var(--positive);
     text-decoration: underline;
+    font-weight: bold;
 }
 .main-chart-title {
-    color: var(--green);
+    color: var(--white);
     font-family: var(--font-1);
     font-size: 20px;
     margin-bottom: 16px;
