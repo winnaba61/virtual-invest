@@ -85,7 +85,11 @@ export const Topbar = () => {
                         <button onClick={handleBoardClick} className={`topbar-button ${activePage === '/board' ||
                                 activePage === '/board/view' ||
                                 activePage === '/board/modify' ||
-                                activePage === '/board/write'
+                                activePage === '/board/write' ||
+                                activePage === '/manager/board' ||
+                                activePage === '/manager/board/view' ||
+                                activePage === '/manager/board/modify' ||
+                                activePage === '/manager/board/write'
                                 ? 'active'
                             : ''
                                 }`}>게시판</button>

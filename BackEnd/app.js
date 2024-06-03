@@ -513,6 +513,19 @@ app.put('/api/writeBoard', (req, res) => {
     });
 });
 
+// manager board: 글 등록하기
+app.put('/api/writeBoardM', (req, res) => {
+    const query = 'INSERT INTO boards (author, title, content, login_id, isNotice) VALUES(?,?,?,?,?)';
+    connection.query(query, [req.body.author, req.body.title, req.body.content, req.body.login_id, req.body.isNotice], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(201).json('success to insert the message');
+    });
+});
+
 // board: 글 조회하기
 app.get('/api/readBoard', (req, res) => {
     const postId = req.query.id;
@@ -536,7 +549,6 @@ app.put('/api/modifyBoard', (req, res) => {
             res.status(500).send('Server Error');
             return;
         }
-        console.log('regist user');
         res.status(201).json('success to modify with the message');
     });
 });
@@ -549,7 +561,6 @@ app.delete('/api/deleteBoard', (req, res) => {
             res.status(500).send('Server Error');
             return;
         }
-        console.log('regist user');
         res.status(201).json('success to delete the page');
     });
 });
