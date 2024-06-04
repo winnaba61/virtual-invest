@@ -28,9 +28,6 @@ export const Login = () => {
 
                     // 유저 정보를 로컬 스토리지에 저장
                     localStorage.setItem('user', JSON.stringify(response.user));
-                    alert('로그인 성공.');
-                    window.location.href = 'http://localhost:5173/main';
-                  
                     console.log('login successful:');
                     fetch('http://localhost:3000/api/setLoginInfo', {
                         method: 'POST',
