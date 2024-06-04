@@ -4,7 +4,7 @@ import Topbar from '../../../components/topbar/Topbar';
 import { ChartLine } from '../../../components/chart/ChartLine';
 import { stockDB } from '../../../data/stockDB';
 
-const sortedStocks = stockDB.sort((a, b) => b.vs - a.vs);
+const sortedStocks = stockDB.sort((a, b) => Math.abs(b.vs) - Math.abs(a.vs));
 const [data1, data2, data3, data4, data5, data6, data7, data8, data9, data10] = sortedStocks
     .slice(0, 10)
     .map((stock) => stock.itmsNm);
