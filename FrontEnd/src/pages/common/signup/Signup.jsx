@@ -72,7 +72,7 @@ export const Signup = () => {
                 user_passwd: passwordRef.current.value,
                 user_birth: birthdayRef.current.value,
                 user_email: emailRef.current.value,
-                user_admin: admin
+                user_admin: admin,
                 user_phone: phoneRef.current.value, // 전화번호 추가
             }),
         })
@@ -143,7 +143,8 @@ export const Signup = () => {
                 <input type="password" placeholder="PW 확인" className="signup-input" ref={confirmPasswordRef} />
                 <input type="text" placeholder="생년월일 (YYYYMMDD)" className="signup-input" ref={birthdayRef} />
                 <input type="text" placeholder="이메일" className="signup-input" ref={emailRef} />
-                <input type="text" placeholder="전화번호" className="signup-input" ref={phoneRef} /> {/* 전화번호 입력 추가 */}
+                <input type="text" placeholder="전화번호" className="signup-input" ref={phoneRef} />{' '}
+                {/* 전화번호 입력 추가 */}
                 <button className="signup-button" onClick={handleButtonClickSignup}>
                     회원가입
                 </button>
