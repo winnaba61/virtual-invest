@@ -6,6 +6,12 @@ export const Login = () => {
     const passwordRef = useRef(null);
 
     const handleButtonClickLogin = () => {
+        // 유효성 검사
+        if (isNaN(idRef.current.value)) {
+            alert("계좌번호는 숫자만 가능합니다.");
+            return;
+        }
+        // 로그인 시작
         fetch('http://localhost:3000/api/login', {
             method: 'POST',
             headers: {

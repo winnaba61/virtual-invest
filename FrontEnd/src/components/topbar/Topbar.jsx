@@ -52,21 +52,6 @@ export const Topbar = () => {
                 window.location.href = '/';
             });
     }, []);
-    const handleBoardClick = () => {
-        if (isAdmin === null) {
-            console.log('관리자 상태를 확인 중입니다.');
-            return;
-        }
-        // '게시판' 클릭 시 실행할 함수
-        console.log('게시판 클릭');
-        if (isAdmin === 1) {
-            console.log('사��자가 관리자입니다');
-            window.location.href = '/manager/board';
-        } else if (isAdmin === 0) {
-            console.log('사용자가 관리자가 아닙니다');
-            window.location.href = '/board';
-        }
-    };
 
     return (
         <div className="topbar">
@@ -82,7 +67,7 @@ export const Topbar = () => {
                     </li>
                     <li className="topbar-menu">
                         <Link
-                            to="/board"
+                            to={isAdmin?"/manager/board":"/board"}
                             className={`topbar-button ${
                                 activePage.includes('/board') || activePage.includes('/manager/board') ? 'active' : ''
                             }`}

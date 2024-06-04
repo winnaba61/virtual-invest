@@ -19,10 +19,9 @@ export const Signup = () => {
             return;
         }
         if (idRef.current.value == '') {
-            alert('아이디를 입력하세요');
+            alert('계좌번호를 입력하세요');
             return;
         }
-
         if (checkID == 0) {
             alert('아이디 중복을 체크하세요.');
             return;
@@ -41,11 +40,12 @@ export const Signup = () => {
             alert('생년월일을 입력하세요');
             return;
         }
-        /*
-        if (birthdayRef.current.value.length != 8) {
-            alert('생년월일을 YYYYMM  DD형식으로 입력하세요');
+        
+        if (!birthdayRef.current.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            alert('생년월일을 YYYY-MM-DD형식으로 입력하세요');
             return;
         }
+        /*
         if (isNaN(birthdayRef.current.value)) {
             alert('생년월일에 숫자만 입력하세요');
             return;
@@ -95,6 +95,12 @@ export const Signup = () => {
     };
 
     const handleButtonClickCheckID = () => {
+        //계좌번호 유효성 검사
+        if (isNaN(idRef.current.value)) {
+            alert("계좌번호는 숫자만 가능합니다.");
+            return;
+        }
+        //중복체크 시작
         fetch('http://localhost:3000/api/checkID', {
             method: 'POST',
             headers: {
@@ -113,10 +119,10 @@ export const Signup = () => {
             .then((response) => {
                 if (response.ischeck === 'exist') {
                     console.log('ID check cant use:');
-                    alert('중복된 아이디입니다.');
+                    alert('중복된 계좌번호입니다.');
                 } else if (response.ischeck === 'null') {
                     console.log('ID check can use:');
-                    alert('사용가능한 아이디입니다.');
+                    alert('사용가능한 계좌번호입니다.');
                     checkID = 1;
                 }
             })
