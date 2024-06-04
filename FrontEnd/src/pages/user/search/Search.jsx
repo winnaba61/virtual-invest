@@ -9,7 +9,7 @@ export const Search = () => {
     const handleButtonClickSearch = () => {
         const foundStock = stockDB.find((stock) => stock.itmsNm === searchTerm); // 종목명으로 검색
         if (foundStock) {
-            window.location.href = `http://localhost:5173/stockInfo?id=${foundStock.id}`; // 검색된 주식 ID를 URL 파라미터로 전달
+            window.location.href = `http://localhost:5173/stockInfo?itmsNm=${foundStock.itmsNm}`; // 검색된 주식 종목명을 URL 파라미터로 전달
         } else {
             alert('검색된 주식이 없습니다.');
         }

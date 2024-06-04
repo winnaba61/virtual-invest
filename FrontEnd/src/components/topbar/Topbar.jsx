@@ -1,12 +1,12 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './topbar.css';
+//import { response } from '../../../../BackEnd/app';
 
 export const Topbar = () => {
     const [activePage, setActivePage] = useState('');
-    const [isAdmin, setIsAdmin] = useState(null); 
+    const [isAdmin, setIsAdmin] = useState(null);
     const location = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         // useLocation의 pathname을 기반으로 현재 페이지 설정
@@ -15,37 +15,43 @@ export const Topbar = () => {
 
     useEffect(() => {
         // 컴포넌트가 마운트될 때 관리자 상태를 가져옴
-        fetch('http://localhost:3000/api/admin')
+        fetch('http://localhost:3000/api/getLoginId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: sessionStorage.getItem('token'),
+            }),
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then((admin) => {
-                console.log('관리자 상태를 가져왔습니다.');
-                setIsAdmin(admin);
+            .then((data) => {
+                fetch(`http://localhost:3000/api/admin?id=${data.user_key}`)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then((admin) => {
+                        console.log('관리자 상태를 가져왔습니다.');
+                        setIsAdmin(admin.user_admin);
+                    })
+                    .catch((error) => {
+                        console.error('관리자 상태를 가져오는 중 오류 발생:', error);
+                    });
             })
             .catch((error) => {
-                console.error('관리자 상태를 가져오는 중 오류 발생:', error);
+                console.error('로그인 ID를 가져오는 중 오류 발생:', error);
+                alert('로그인 에러가 발생했습니다. 다시 로그인 해주세요.');
+                window.location.href = '/';
             });
     }, []);
-
-    const handleBoardClick = () => {
-        if (isAdmin === null) {
-            console.log('관리자 상태를 확인 중입니다.');
-            return;
-        }
-        // '게시판' 클릭 시 실행할 함수
-        console.log('게시판 클릭');
-        if (isAdmin === 1) {
-            console.log('사용자가 관리자입니다');
-            navigate('/manager/board');
-        } else if (isAdmin === 0) {
-            console.log('사용자가 관리자가 아닙니다');
-            navigate('/board');
-        }
-    };
 
     return (
         <div className="topbar">
@@ -59,23 +65,21 @@ export const Topbar = () => {
                     <li className={`topbar-menu ${activePage === '/investment' ? 'active' : ''}`}>
                         <Link to="/investment">가상투자</Link>
                     </li>
-                    <li
-                        className={`topbar-menu ${
-                            activePage === '/board' ||
-                            activePage === '/board/view' ||
-                            activePage === '/board/modify' ||
-                            activePage === '/board/write'
-                                ? 'active'
-                                : ''
-                        }`}
-                    >
-                        <button onClick={handleBoardClick} className="topbar-button">게시판</button>
+                    <li className="topbar-menu">
+                        <Link
+                            to={isAdmin?"/manager/board":"/board"}
+                            className={`topbar-button ${
+                                activePage.includes('/board') || activePage.includes('/manager/board') ? 'active' : ''
+                            }`}
+                        >
+                            게시판
+                        </Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/mypage' ? 'active' : ''}`}>
                         <Link to="/mypage">마이페이지</Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/stockInfo' ? 'active' : ''}`}>
-                        <Link to="/stockInfo">주식 상세정보</Link>
+                        <Link to="/stockInfo?itmsNm=두산">주식 상세정보</Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/search' ? 'active' : ''}`}>
                         <Link to="/search">검색</Link>

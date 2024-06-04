@@ -7,24 +7,20 @@ export const Modify = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get("id");
-    const boardNo = queryParams.get("board");
-    const backendServerURL = boardNo == 1 ? 'http://localhost:3001/Mboard' : 'http://localhost:3001/boards';
-
 
     const [post, setPost] = useState(null);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
     useEffect(() => {
-        fetch(backendServerURL)
+        fetch(`http://localhost:3000/api/readBoard?id=${postId}`)
             .then(response => response.json())
             .then(data => {
-                const foundPost = data.find(item => item.id == postId);
-                setPost(foundPost);
-                setContent(foundPost.content)
-                setTitle(foundPost.title)
+                setPost(data);
+                setContent(data.content);
+                setTitle(data.title);
             });
-    }, [postId]);
+    }, []);
 
     const handleButtonClickMoidfy = () => {
         if (!title.trim() || !content.trim()) {
@@ -33,16 +29,14 @@ export const Modify = () => {
         }
 
         //fetch(`http://localhost:3001/boards/${postId}`, {
-        fetch(`${backendServerURL}/${postId}`, {
+        fetch(`http://localhost:3000/api/modifyBoard?id=${postId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                author: post.author,
                 title,
                 content,
-                date: new Date().toISOString().split('T')[0],
             }),
         })
             .then(response => response.json())
@@ -56,7 +50,7 @@ export const Modify = () => {
     };
 
     const handleButtonClickDelete = () => {
-        fetch(`${backendServerURL}/${postId}`, {
+        fetch(`http://localhost:3000/api/deleteBoard?id=${postId}`, {
             method: 'DELETE',
         })
             .then(() => {
@@ -64,6 +58,9 @@ export const Modify = () => {
             });
     };
 
+    const handleButtonClickBack = () => {
+        window.location.href = `/board/view?id=${postId}`;
+    };
     if (!post) {
         return (
             <>
@@ -71,11 +68,8 @@ export const Modify = () => {
                 <div className="modify">
                     <div>게시물을 찾을 수 없습니다.</div>
                     <div className="modify-pagination">
-                        <button className="modify-pagination-button" onClick={handleButtonClickDelete}>
-                            삭제
-                        </button>
-                        <button className="modify-pagination-button" onClick={handleButtonClickMoidfy}>
-                            수정완료
+                        <button className="modify-pagination-button" onClick={handleButtonClickBack}>
+                            뒤로
                         </button>
                     </div>
                 </div>
@@ -89,7 +83,7 @@ export const Modify = () => {
             <div className="modify">
                 <div className="modify-date">
                     <div id="title">작성일</div>
-                    { post.date }
+                    { post.date.split('T')[0] }
                 </div>
                 <div className="modify-title">
                     <div id="title">제목</div>

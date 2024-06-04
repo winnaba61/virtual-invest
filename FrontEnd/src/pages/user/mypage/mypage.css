@@ -2,12 +2,14 @@
     color: var(--white);
     width: 800px;
     height: 72vh;
+    margin-bottom: 60px;
 }
 
 .mypage-title {
     font-family: var(--font-1);
     font-size: 20px;
     margin-bottom: 16px;
+    color: var(--white);
 }
 
 .mypage-subtitle {
@@ -29,6 +31,7 @@
     background-color: var(--blue);
     width: 30%;
     color: var(--black);
+    height: 20px;
 }
 
 .mypage-stocks-table th {
@@ -36,6 +39,7 @@
     background-color: var(--blue);
     width: 30%;
     color: var(--black);
+    height: 20px;
 }
 
 .mypage-stock-table th {
@@ -43,24 +47,28 @@
     background-color: var(--blue);
     color: var(--black);
     padding: 4px 0;
+    height: 20px;
 }
 
 .mypage-info-table td {
     border: 1px solid var(--white);
     padding: 4px 0;
     padding-left: 16px;
+    height: 20px;
 }
 
 .mypage-stocks-table td {
     border: 1px solid var(--white);
     padding: 4px 0;
     padding-left: 16px;
+    height: 20px;
 }
 
 .mypage-stock-table td {
     border: 1px solid var(--white);
     padding: 4px 0;
     text-align: center;
+    height: 20px;
 }
 .mypage {
     color: var(--white);

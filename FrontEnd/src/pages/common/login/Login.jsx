@@ -1,35 +1,17 @@
 import './login.css';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 export const Login = () => {
     const idRef = useRef(null);
     const passwordRef = useRef(null);
 
-    const setLoginInfo = () => {
-        fetch('http://localhost:3000/api/loginInfo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: idRef.current.value,
-            }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((response) => {
-                console.log('set login info');
-            })
-            .catch((error) => {
-                console.error('Error checking:', error);
-            });
-    }
-
     const handleButtonClickLogin = () => {
+        // 유효성 검사
+        if (isNaN(idRef.current.value)) {
+            alert("계좌번호는 숫자만 가능합니다.");
+            return;
+        }
+        // 로그인 시작
         fetch('http://localhost:3000/api/login', {
             method: 'POST',
             headers: {
@@ -48,17 +30,44 @@ export const Login = () => {
             })
             .then((response) => {
                 if (response.islogin === 'ok') {
+                    console.log('로그인 성공:', response.user);
+
+                    // 유저 정보를 로컬 스토리지에 저장
+                    localStorage.setItem('user', JSON.stringify(response.user));
                     console.log('login successful:');
-                    alert('로그인 성공.');
-                    setLoginInfo();
-                    window.location.href = 'http://localhost:5173/main';
+                    fetch('http://localhost:3000/api/setLoginInfo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user_id: idRef.current.value,
+                        }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            sessionStorage.clear();
+                            return response.json();
+                        })
+                        .then((response) => {
+                            sessionStorage.setItem('token', response.token);
+                            console.log('set login token: ' + response.token);
+                            //alert('로그인 성공.' + sessionStorage.token);
+                            window.location.href = 'http://localhost:5173/main';
+                        })
+                        .catch((error) => {
+                            console.error('Error checking:', error);
+                        });
+                  
                 } else {
-                    console.log('login failed:');
+                    console.log('로그인 실패:');
                     alert('로그인 실패.');
                 }
             })
             .catch((error) => {
-                console.error('Error checking:', error);
+                console.error('에러 발생:', error);
                 alert('로그인 실패.');
             });
     };
@@ -75,9 +84,17 @@ export const Login = () => {
                 <button className="login-button" onClick={handleButtonClickLogin}>
                     로그인
                 </button>
-                <a href="/signup" className="login-text">
-                    회원가입
-                </a>
+                <div>
+                    <a href="/signup" className="login-text">
+                        회원가입
+                    </a>
+                    <a href="/findID" className="login-text">
+                        아이디 찾기
+                    </a>
+                    <a href="/findPass" className="login-text">
+                        비밀번호 찾기
+                    </a>
+                </div>
                 <button className="login-button" id="kakao">
                     카카오톡
                 </button>

@@ -1,0 +1,71 @@
+.modify {
+    color: var(--white);
+}
+
+.modify-date {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+#title {
+    font-family: var(--font-1);
+    font-size: 16px;
+    margin-right: 40px;
+}
+
+.modify-title {
+    margin: 20px 0;
+}
+
+.modify-title-content {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    width: 600px;
+    height: 32px;
+    border-radius: 4px;
+    padding: 0 16px;
+    color: var(--black);
+    margin-top: 16px;
+    margin-bottom: 40px;
+}
+
+.modify-content-content {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end; /* 커서를 하단으로 정렬 */
+    justify-content: flex-start; /* 커서를 좌측으로 정렬 */
+    background-color: white;
+    width: 600px;
+    height: 400px;
+    border-radius: 4px;
+    padding: 16px;
+    padding-bottom: 360px; /* 상단 패딩을 늘려 커서를 하단으로 이동 */
+    color: var(--black);
+    margin-top: 16px;
+    margin-bottom: 40px;
+    white-space: pre-wrap;
+}
+.modify-content {
+    margin: 20px 0;
+}
+
+.modify-pagination-button {
+    width: 160px;
+    height: 40px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--blue);
+    color: var(--white);
+    font-size: 16px;
+    margin: 60px;
+    font-family: var(--font-1);
+}
+
+.modify-plane-text {
+    color: var(--white);
+    font-size: 12px;
+    font-family: var(--font-1);
+}
