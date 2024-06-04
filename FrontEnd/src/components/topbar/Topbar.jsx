@@ -5,9 +5,8 @@ import './topbar.css';
 
 export const Topbar = () => {
     const [activePage, setActivePage] = useState('');
-    const [isAdmin, setIsAdmin] = useState(null); 
+    const [isAdmin, setIsAdmin] = useState(null);
     const location = useLocation();
-    
 
     useEffect(() => {
         // useLocation의 pathname을 기반으로 현재 페이지 설정
@@ -49,7 +48,7 @@ export const Topbar = () => {
             })
             .catch((error) => {
                 console.error('로그인 ID를 가져오는 중 오류 발생:', error);
-                alert("로그인 에러가 발생했습니다. 다시 로그인 해주세요.");
+                alert('로그인 에러가 발생했습니다. 다시 로그인 해주세요.');
                 window.location.href = '/';
             });
     }, []);
@@ -61,7 +60,7 @@ export const Topbar = () => {
         // '게시판' 클릭 시 실행할 함수
         console.log('게시판 클릭');
         if (isAdmin === 1) {
-            console.log('사용자가 관리자입니다');
+            console.log('사��자가 관리자입니다');
             window.location.href = '/manager/board';
         } else if (isAdmin === 0) {
             console.log('사용자가 관리자가 아닙니다');
@@ -82,17 +81,14 @@ export const Topbar = () => {
                         <Link to="/investment">가상투자</Link>
                     </li>
                     <li className="topbar-menu">
-                        <button onClick={handleBoardClick} className={`topbar-button ${activePage === '/board' ||
-                                activePage === '/board/view' ||
-                                activePage === '/board/modify' ||
-                                activePage === '/board/write' ||
-                                activePage === '/manager/board' ||
-                                activePage === '/manager/board/view' ||
-                                activePage === '/manager/board/modify' ||
-                                activePage === '/manager/board/write'
-                                ? 'active'
-                            : ''
-                                }`}>게시판</button>
+                        <Link
+                            to="/board"
+                            className={`topbar-button ${
+                                activePage.includes('/board') || activePage.includes('/manager/board') ? 'active' : ''
+                            }`}
+                        >
+                            게시판
+                        </Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/mypage' ? 'active' : ''}`}>
                         <Link to="/mypage">마이페이지</Link>

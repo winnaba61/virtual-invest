@@ -76,9 +76,6 @@ export const Login = () => {
                 <a href="/signup" className="login-text">
                     회원가입
                 </a>
-                <button className="login-button" id="kakao">
-                    카카오톡
-                </button>
             </div>
         </div>
     );
