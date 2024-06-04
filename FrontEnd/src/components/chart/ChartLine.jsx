@@ -20,6 +20,12 @@ const CustomTooltip = ({ active, payload }) => {
     return null;
 };
 
+// 날짜 형식을 변환하는 함수
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}`;
+};
+
 export const ChartLineURL = ({ title }) => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -73,7 +79,7 @@ export const ChartLine = ({ data }) => {
             <h3 className="chart-title">{data}</h3>
             <ResponsiveContainer>
                 <LineChart data={reversedData}>
-                    <XAxis dataKey="basDt" hide={true} />
+                    <XAxis dataKey="basDt" tickFormatter={formatDate} />
                     <YAxis domain={[minLowest, maxHighest]} hide={true} />
                     <Tooltip content={<CustomTooltip />} />
                     <Line
