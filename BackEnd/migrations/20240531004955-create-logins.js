@@ -24,6 +24,9 @@ module.exports = {
       user_email: {
           type: Sequelize.STRING
         },
+      user_phone: {
+          type: Sequelize.STRING
+      },
       user_admin: {
           type: Sequelize.BOOLEAN,
           defaultValue: false
