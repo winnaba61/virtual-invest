@@ -8,6 +8,7 @@ export const Signup = () => {
     const confirmPasswordRef = useRef(null);
     const birthdayRef = useRef(null);
     const emailRef = useRef(null);
+    const admin = 0;
     const phoneRef = useRef(null); // 전화번호 입력에 대한 useRef 추가
 
     let checkID = 0;
@@ -41,7 +42,7 @@ export const Signup = () => {
             return;
         }
         if (birthdayRef.current.value.length != 8) {
-            alert('생년월일을 YYYYMMDD형식으로 입력하세요');
+            alert('생년월일을 YYYYMM  DD형식으로 입력하세요');
             return;
         }
         if (isNaN(birthdayRef.current.value)) {
@@ -71,6 +72,7 @@ export const Signup = () => {
                 user_passwd: passwordRef.current.value,
                 user_birth: birthdayRef.current.value,
                 user_email: emailRef.current.value,
+                user_admin: admin
                 user_phone: phoneRef.current.value, // 전화번호 추가
             }),
         })

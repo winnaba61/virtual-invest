@@ -10,16 +10,17 @@ export const Board = () => {
     const postsPerPage = 15;
 
     useEffect(() => {
-        fetch('http://localhost:3001/boards')
+        //fetch('http://localhost:3001/boards')
+        fetch('http://localhost:3000/api/boardHeadlines')
             .then((response) => response.json())
             .then((data) => setContents(data.reverse()));
-        fetch('http://localhost:3001/Mboard')
+        //fetch('http://localhost:3001/Mboard')
+        fetch('http://localhost:3000/api/mBoardHeadlines')
             .then((response) => response.json())
             .then((data) => setMContents(data.reverse()));
     }, []);
 
     const handleButtonClickWrite = () => {
-        //window.location.href = 'http://localhost:5173/board/write';
         window.location.href = '/board/write';
     };
 
@@ -74,16 +75,16 @@ export const Board = () => {
                             ? Mcontents.map((post, index) => (
                                   <tr key={post.id}>
                                       <td id="post-number">
-                                          <a href={`/board/view?id=${post.id}&board=1`}>{Mcontents.length - index}</a>
+                                          <a href={`/board/view?id=${post.id}`}>공지</a>
                                       </td>
                                       <td id="post-title">
-                                          <a href={`/board/view?id=${post.id}&board=1`}>{post.title}</a>
+                                          <a href={`/board/view?id=${post.id}`}>{post.title}</a>
                                       </td>
                                       <td id="post-author">
-                                          <a href={`/board/view?id=${post.id}&board=1`}>{post.author}</a>
+                                          <a href={`/board/view?id=${post.id}`}>{post.author}</a>
                                       </td>
                                       <td id="post-date">
-                                          <a href={`/board/view?id=${post.id}&board=1`}>{post.date}</a>
+                                        <a href={`/board/view?id=${post.id}`}>{post.date.split('T')[0]}</a>
                                       </td>
                                   </tr>
                               ))
@@ -103,7 +104,7 @@ export const Board = () => {
                                         <a href={`/board/view?id=${post.id}`}>{post.author}</a>
                                     </td>
                                     <td id="post-date">
-                                        <a href={`/board/view?id=${post.id}`}>{post.date}</a>
+                                        <a href={`/board/view?id=${post.id}`}>{post.date.split('T')[0]}</a>
                                     </td>
                                 </tr>
                             ))

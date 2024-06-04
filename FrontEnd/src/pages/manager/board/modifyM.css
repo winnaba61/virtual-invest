@@ -1,15 +1,8 @@
-.write {
+.modify {
     color: var(--white);
 }
 
-.write-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.write-date {
+.modify-date {
     display: flex;
     align-items: center;
     margin: 20px 0;
@@ -21,11 +14,11 @@
     margin-right: 40px;
 }
 
-.write-title {
+.modify-title {
     margin: 20px 0;
 }
 
-.write-title-content {
+.modify-title-content {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -39,7 +32,7 @@
     margin-bottom: 40px;
 }
 
-.write-content-content {
+.modify-content-content {
     box-sizing: border-box;
     display: flex;
     align-items: flex-end; /* 커서를 하단으로 정렬 */
@@ -55,17 +48,11 @@
     margin-bottom: 40px;
     white-space: pre-wrap;
 }
-
-.write-content {
+.modify-content {
     margin: 20px 0;
 }
 
-.write-pagination {
-    display: flex;
-    justify-content: center;
-}
-
-.write-pagination-button {
+.modify-pagination-button {
     width: 160px;
     height: 40px;
     border: none;
@@ -73,10 +60,11 @@
     background-color: var(--blue);
     color: var(--white);
     font-size: 16px;
+    margin: 60px;
     font-family: var(--font-1);
 }
 
-.write-plane-text {
+.modify-plane-text {
     color: var(--white);
     font-size: 12px;
     font-family: var(--font-1);

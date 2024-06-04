@@ -7,35 +7,46 @@ export const View = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get("id");
-    const boardNo = queryParams.get("board");
 
     const [post, setPost] = useState(null);
+    const [userKey, setUserKey] = useState(-1);
 
     useEffect(() => {
-        if (!boardNo)
-        fetch('http://localhost:3001/boards')
+        //fetch('http://localhost:3001/Mboard')
+        fetch('http://localhost:3000/api/readBoard?id='+postId)
             .then(response => response.json())
-            .then(data => {
-                const foundPost = data.find(item => item.id == postId);
-                setPost(foundPost);
+            .then(data => setPost(data));
+
+        fetch('http://localhost:3000/api/getLoginId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: sessionStorage.getItem('token'),
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => setUserKey(data.user_key))
+            .catch((error) => {
+                console.error('로그인 ID를 가져오는 중 오류 발생:', error);
             });
-        else
-            fetch('http://localhost:3001/Mboard')
-                .then(response => response.json())
-                .then(data => {
-                    const foundPost = data.find(item => item.id == postId);
-                    setPost(foundPost);
-                });
+
     }, [postId]);
 
     const handleButtonClickBoard = () => {
         window.location.href = '/board';
     };
     const handleButtonClickModify = () => {
-        if (!boardNo)
+        if (userKey === post.login_id)
             window.location.href = '/board/modify?id=' + postId;
         else
-            window.location.href = '/board/modify?id=' + postId + '&board=' + boardNo; 
+            alert("수정 권한이 없습니다");
     };
 
     if (!post) {
@@ -47,9 +58,6 @@ export const View = () => {
                     <div className="view-pagination">
                         <button className="view-pagination-button" onClick={handleButtonClickBoard}>
                             목록
-                        </button>
-                        <button className="view-pagination-button" onClick={handleButtonClickModify}>
-                            수정하기
                         </button>
                     </div>
                 </div>
@@ -63,7 +71,7 @@ export const View = () => {
             <div className="view">
                 <div className="view-date">
                     <div id="title">작성일</div>
-                    {post.date}
+                    {post.date.split('T')[0]}
                 </div>
                 <div className="view-author">
                     <div id="title">작성자</div>
