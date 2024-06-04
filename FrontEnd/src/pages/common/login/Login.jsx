@@ -24,6 +24,13 @@ export const Login = () => {
             })
             .then((response) => {
                 if (response.islogin === 'ok') {
+                    console.log('로그인 성공:', response.user);
+
+                    // 유저 정보를 로컬 스토리지에 저장
+                    localStorage.setItem('user', JSON.stringify(response.user));
+                    alert('로그인 성공.');
+                    window.location.href = 'http://localhost:5173/main';
+                  
                     console.log('login successful:');
                     fetch('http://localhost:3000/api/setLoginInfo', {
                         method: 'POST',
@@ -50,6 +57,7 @@ export const Login = () => {
                         .catch((error) => {
                             console.error('Error checking:', error);
                         });
+                  
                 } else {
                     console.log('로그인 실패:');
                     alert('로그인 실패.');
