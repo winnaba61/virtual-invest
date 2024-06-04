@@ -1,14 +1,14 @@
 #root {
     --font-1: 'GongGothicMedium';
-    --font-2: 'paybooc-Bold';
-    --background-color: #001634;
-    --black: #030303;
+    --font-2: 'NEXON Lv2 Gothic';
+    --background-color: #000000;
+    --black: #252525;
     --gray: #4f4f4f;
     --white: #f2f2f2;
-    --blue: #5983d9;
-    --green: #a1a640;
-    --positive: #e94560;
-    --negative: #006dee;
+    --blue: #0a84ff;
+    --green: #ff9500;
+    --positive: #ff3b30;
+    --negative: #007aff;
 }
 
 .container {
@@ -40,5 +40,5 @@ button {
     border: 0;
 }
 button:hover {
-    box-shadow: 0px 0px 4px var(--gray); /* 버튼에 그림자 추가 */
+    box-shadow: 0px 0px 8px var(--green); /* 버튼에 그림자 추가 */
 }

@@ -60,7 +60,7 @@
     width: 160px;
     height: 40px;
     border: none;
-    border-radius: 4px;
+    border-radius: 16px;
     background-color: var(--blue);
     color: var(--white);
     font-size: 16px;

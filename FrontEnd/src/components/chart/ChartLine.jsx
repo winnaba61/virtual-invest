@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { stockDB } from '../../data/stockDB';
-import { dummyData } from '../../data/stockInfo/dummyData.js';
+import React from 'react';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { useLocation } from 'react-router-dom';
 import './chartLine.css';
+import * as stocks from '../../data/stocks'; // stocks 디렉토리의 모든 파일을 가져옴
 
 const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -20,30 +20,29 @@ const CustomTooltip = ({ active, payload }) => {
     return null;
 };
 
-export const ChartLine = ({ id, title }) => {
-    // const [stockData, setStockData] = useState([]);
+// 날짜 형식을 변환하는 함수
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}`;
+};
 
-    // useEffect(() => {
-    //     // 해당 ID에 해당하는 주식 데이터 가져오기
-    //     const selectedStock = stockDB.find((stock) => stock.id === id);
-    //     // 해당 주식 데이터 파일 가져오기
-    //     import(`../../data/stockInfo/${selectedStock.itmsNm}.js`)
-    //         .then((module) => {
-    //             setStockData([...module.default]);
-    //             console.log(selectedStock);
-    //         })
-    //         .catch((error) => console.error('데이터를 가져오는 동안 오류가 발생했습니다:', error));
-    // }, [id]);
+export const ChartLineURL = ({ title }) => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const itmNm = searchParams.get('itmsNm');
+    const stockData = stocks[itmNm]; // itmNm에 해당하는 주식 데이터 가져오기
 
-    const stockData = dummyData;
+    if (!stockData) {
+        return <div>No data available</div>;
+    }
+
     const reversedData = [...stockData].reverse();
-    const firstDataAvg = (reversedData[0]?.mkp + reversedData[0]?.clpr) / 2;
     const minLowest = Math.min(...reversedData.map((entry) => entry?.lopr || 0));
     const maxHighest = Math.max(...reversedData.map((entry) => entry?.hipr || 0));
     const length = reversedData.length;
 
     return (
-        <div className="chartLine">
+        <div className="chartLineURL">
             <h3 className="chart-title">{title}</h3>
             <ResponsiveContainer>
                 <LineChart data={reversedData}>
@@ -53,7 +52,40 @@ export const ChartLine = ({ id, title }) => {
                     <Line
                         type="linear"
                         dataKey="clpr"
-                        stroke={reversedData[length - 1]?.clpr > firstDataAvg ? '#E94560' : '#006DEE'}
+                        stroke={reversedData[length - 1].clpr > reversedData[length - 2].clpr ? '#FF3B30' : '#007AFF'}
+                        dot={false}
+                        activeDot={{ r: 8 }}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
+    );
+};
+
+export const ChartLine = ({ data }) => {
+    const stockData = stocks[data];
+
+    if (!stockData) {
+        return <div>No data available</div>;
+    }
+
+    const reversedData = [...stockData].reverse();
+    const minLowest = Math.min(...reversedData.map((entry) => entry?.lopr || 0));
+    const maxHighest = Math.max(...reversedData.map((entry) => entry?.hipr || 0));
+    const length = reversedData.length;
+
+    return (
+        <div className="chartLine">
+            <h3 className="chart-title">{data}</h3>
+            <ResponsiveContainer>
+                <LineChart data={reversedData}>
+                    <XAxis dataKey="basDt" tickFormatter={formatDate} />
+                    <YAxis domain={[minLowest, maxHighest]} hide={true} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Line
+                        type="linear"
+                        dataKey="clpr"
+                        stroke={reversedData[length - 1].clpr > reversedData[length - 2].clpr ? '#FF3B30' : '#007AFF'}
                         dot={false}
                         activeDot={{ r: 8 }}
                     />

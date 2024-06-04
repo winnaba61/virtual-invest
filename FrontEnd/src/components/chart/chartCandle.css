@@ -4,11 +4,13 @@
     height: 100%;
     color: var(--black);
     border-radius: 4px 4px 0 0;
+    border-top: 1px solid var(--white);
+    border-left: 1px solid var(--white);
+    border-right: 1px solid var(--white);
     padding: 8px;
 }
 
 #back {
-    background-color: white;
     margin-top: 320px;
 }
 
