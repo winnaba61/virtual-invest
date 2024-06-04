@@ -25,6 +25,7 @@ export const Login = () => {
             .then((response) => {
                 if (response.islogin === 'ok') {
                     console.log('로그인 성공:', response.user);
+
                     // 유저 정보를 로컬 스토리지에 저장
                     localStorage.setItem('user', JSON.stringify(response.user));
                     alert('로그인 성공.');
