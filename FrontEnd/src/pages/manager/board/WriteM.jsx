@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import './writeM.css';
 import { Topbar } from '../../../components/topbar/Topbar';
@@ -140,7 +141,6 @@ export const WriteM = () => {
                     </label>
                 </div>
                 <div className="write-pagination">
-
                     <button className="write-pagination-button" onClick={handleButtonClickWrite}>
                         게시글 등록
                     </button>

@@ -1,5 +1,5 @@
 import './login.css';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 export const Login = () => {
     const idRef = useRef(null);
@@ -50,14 +50,13 @@ export const Login = () => {
                         .catch((error) => {
                             console.error('Error checking:', error);
                         });
-                    
                 } else {
-                    console.log('login failed:');
+                    console.log('로그인 실패:');
                     alert('로그인 실패.');
                 }
             })
             .catch((error) => {
-                console.error('Error checking:', error);
+                console.error('에러 발생:', error);
                 alert('로그인 실패.');
             });
     };
@@ -66,7 +65,7 @@ export const Login = () => {
         <div className="login">
             <div className="login-container">
                 <div className="login-title" id="logo">
-                    소프트웨어 공학 팀프로젝트 -2조
+                    소프트웨어 공학 팀프로젝트 - 2조
                 </div>
                 <div className="login-title">로그인</div>
                 <input type="text" placeholder="ID" className="login-input" ref={idRef} />
