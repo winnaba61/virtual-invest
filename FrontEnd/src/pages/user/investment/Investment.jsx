@@ -88,6 +88,11 @@ export const Investment = () => {
 
             const investableShares = Math.floor(currentWallet / currentPrice); // 투자 가능한 주식 수 계산
 
+            if (investmentAmount > currentWallet) {
+                alert('보유 자산이 부족합니다.');
+                return;
+            }
+
             if (investableShares >= parseInt(investmentValue)) {
                 // 투자 가능한 주식 수를 초과하는지 확인
                 // 서버로 투자한 주 수, 잔여 잔고를 전달
@@ -128,6 +133,11 @@ export const Investment = () => {
             const investmentAmount = parseInt(investmentValue);
             console.log('매수:', investmentAmount);
 
+            if (investmentAmount > currentWallet) {
+                alert('보유 자산이 부족합니다.');
+                return;
+            }
+
             // 서버로 투자 금액을 전달
             fetch('http://localhost:3000/api/invest', {
                 method: 'POST',
@@ -160,6 +170,7 @@ export const Investment = () => {
                 });
         }
     };
+
 
     const handleButtonClickSell = () => {
         if (!foundStock) {
