@@ -1,0 +1,12 @@
+diff a/BackEnd/config/config.json b/BackEnd/config/config.json	(rejected hunks)
+@@ -1,8 +1,8 @@
+ {
+     "development": {
+         "username": "root",
+-        "password": "1234",
+-        "database": "project3",
++        "password": "MySQLpass",
++        "database": "swe",
+         "host": "127.0.0.1",
+         "dialect": "mysql"
+     },

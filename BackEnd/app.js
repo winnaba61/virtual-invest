@@ -5,9 +5,10 @@ const mysql = require('mysql');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
-
 const app = express();
 const port = 3000;
+
+module.exports = app;
 
 // MySQL 연결
 const connection = mysql.createConnection({
@@ -42,6 +43,63 @@ app.get('/api/current-price', (req, res) => {
 });
 
 
+// 관리자인지 여부를 확인
+// 요청 형식: ~/api/admin?id=(getLoginId로 얻어온 key)
+app.get('/api/admin', (req, res) => {
+    const query = 'SELECT user_admin FROM logins WHERE id=?';
+    connection.query(query, [req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
+    
+});
+
+// 관리자인지 여부를 확인
+// 요청 형식: ~/api/admin?id=(getLoginId로 얻어온 key)
+app.get('/api/userName', (req, res) => {
+    const query = 'SELECT user_name FROM logins WHERE id=?';
+    connection.query(query, [req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
+});
+
+// board: 공지 게시글 제목만 가져오기
+    app.get('/api/mBoardHeadlines', (req, res) => {
+        const query = 'SELECT id, author, title, createdAt as date FROM boards WHERE isNotice=1';
+        connection.query(query, (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Server Error');
+                return;
+            }
+            res.json(results);
+        });
+    });
+
+// board: 일반 게시글 제목만 가져오기
+app.get('/api/boardHeadlines', (req, res) => {
+    const query = 'SELECT id, author, title, createdAt as date FROM boards WHERE isNotice=0';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results);
+    });
+});
+
+// POST 요청 처리
+app.use(express.json());
 // 보유 자산 가져오기 (POST 요청으로 user_account 받아오기)
 app.post('/api/current-wallet', (req, res) => {
   const { user_account } = req.body;
@@ -58,14 +116,17 @@ app.post('/api/current-wallet', (req, res) => {
 
 // 사용자 등록
 app.post('/api/regist', (req, res) => {
-  const { user_name, user_id, user_passwd, user_birth, user_email, user_phone } = req.body;
-  const query = 'INSERT INTO user_info (user_name, user_account, user_password, user_birth, user_email, user_phone) VALUES(?,?,?,?,?,?)';
-  connection.query(query, [user_name, user_id, user_passwd, user_birth, user_email, user_phone], (error, results) => {
-    if (error) {
-      console.error('Error executing query:', error);
-      res.status(500).send('Server Error');
-      return;
-    }
+    const { user_name, user_id, user_passwd, user_birth, user_email, user_phone, user_admin } = req.body;
+
+    const query = 'INSERT INTO logins (user_name, user_id, user_passwd, user_birth, user_email, user_phone, user_admin) VALUES(?,?,?,?,?,?,?)';
+
+    connection.query(query, [user_name, user_id, user_passwd, user_birth, user_email, user_phone, user_admin], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(200).json({ message: 'regist user' });
     console.log('User registered successfully.');
 
     // 회원가입 후 user_account 테이블에 초기 자산 설정
@@ -78,6 +139,7 @@ app.post('/api/regist', (req, res) => {
       }
       console.log('User account initialized successfully.');
       res.status(200).json({ message: 'User registered and account initialized successfully.' });
+
     });
   });
 });
@@ -99,7 +161,69 @@ app.post('/api/checkID', (req, res) => {
   });
 });
 
-// 로그인
+app.post('/api/setLoginInfo', (req, res) => {
+    const userID = req.body.user_id;
+
+    const query0 = 'SELECT id FROM logins WHERE user_id = ?';
+    const query1 = 'DELETE FROM user_loginInfo WHERE user_key = ?'
+    const query2 = 'INSERT INTO user_loginInfo (user_key, tokenKey) VALUES(?,?)';
+
+    connection.query(query0, [userID], (error, result) => {
+        const userKey = result[0].id;
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        connection.query(query1, [userKey], (error, result) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Server Error');
+                return;
+            }
+            const tokenVal = Math.floor(Math.random() * 0x7FFFFFFF);
+            connection.query(query2, [userKey, tokenVal], (error, results) => {
+                if (error) {
+                    console.error('Error executing query:', error);
+                    res.status(500).send('Server Error');
+                    return;
+                }
+                console.log(userID +' is loged in with ' + tokenVal);
+                res.status(200).json({ message: 'set login info', token: tokenVal });
+            });
+        });
+    });
+});
+
+app.post('/api/getLoginId', (req, res) => {
+    const query1 = 'DELETE FROM user_loginInfo WHERE createdAt < DATE_SUB(NOW(), INTERVAL 1 HOUR)'; //1시간 지나면 로그인 정보 삭제
+    const query2 = 'SELECT user_key FROM user_loginInfo WHERE tokenKey = ?';
+
+    // 우선 한시간 지난 로그인 정보 삭제
+    connection.query(query1, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        // 받은 토큰을 가지고 id로 변환 후 반환
+        connection.query(query2, [req.body.token], (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Server Error');
+                return;
+            }
+
+            if (results.length > 0) {
+                res.status(200).json(results[0]);
+            } else {
+                res.status(404).json({ message: 'Login info not found' });
+            }
+        });
+    });
+});
+//  로그인
 app.post('/api/login', (req, res) => {
   const loginID = req.body.user_id;
   const loginPasswd = req.body.user_passwd;
@@ -364,10 +488,78 @@ app.post('/api/buymoney', (req, res) => {
   });
 });
 
+module.exports = app;
+
+// board: 글 등록하기
+app.put('/api/writeBoard', (req, res) => {
+    const query = 'INSERT INTO boards (author, title, content, login_id) VALUES(?,?,?,?)';
+    connection.query(query, [req.body.author, req.body.title, req.body.content, req.body.login_id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(201).json('success to insert the message');
+    });
+});
+
+// manager board: 글 등록하기
+app.put('/api/writeBoardM', (req, res) => {
+    const query = 'INSERT INTO boards (author, title, content, login_id, isNotice) VALUES(?,?,?,?,?)';
+    connection.query(query, [req.body.author, req.body.title, req.body.content, req.body.login_id, req.body.isNotice], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(201).json('success to insert the message');
+    });
+});
+
+// board: 글 조회하기
+app.get('/api/readBoard', (req, res) => {
+    const postId = req.query.id;
+    const query = 'SELECT author, title, content, createdAt as date, login_id FROM boards where id = ?'
+    connection.query(query, [postId], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results[0]);
+    });
+});
+
+// board: 글 수정하기
+app.put('/api/modifyBoard', (req, res) => {
+    const query = 'UPDATE boards SET title = ?, content = ? WHERE id = ?';
+    connection.query(query, [req.body.title, req.body.content, req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(201).json('success to modify with the message');
+    });
+});
+
+app.delete('/api/deleteBoard', (req, res) => {
+    const query = 'DELETE FROM boards WHERE id = ?';
+    connection.query(query, [req.query.id], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(201).json('success to delete the page');
+    });
+});
 const PORT = process.env.PORT || 3000;
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
 
 /*
 // API 요청 보내기

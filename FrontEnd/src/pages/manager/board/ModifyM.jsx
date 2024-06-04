@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'
-import './modify.css';
+import './modifyM.css';
 import { Topbar } from '../../../components/topbar/Topbar';
 
-export const Modify = () => {
+export const ModifyM = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const postId = queryParams.get("id");
@@ -42,7 +42,7 @@ export const Modify = () => {
             .then(response => response.json())
             .then(data => {
                 console.log('게시글 등록 성공:', data);
-                window.location.href = '/board';
+                window.location.href = '/manager/board';
             })
             .catch(error => {
                 console.error('게시글 등록 실패:', error);
@@ -54,12 +54,12 @@ export const Modify = () => {
             method: 'DELETE',
         })
             .then(() => {
-                window.location.href = '/board';
+                window.location.href = '/manager/board';
             });
     };
 
     const handleButtonClickBack = () => {
-        window.location.href = `/board/view?id=${postId}`;
+        window.location.href = `/manager/board/view?id=${postId}`;
     };
     if (!post) {
         return (
@@ -80,6 +80,7 @@ export const Modify = () => {
     return (
         <>
             <Topbar />
+            <p class="modify-plane-text"> 관리자 모드 </p>
             <div className="modify">
                 <div className="modify-date">
                     <div id="title">작성일</div>
