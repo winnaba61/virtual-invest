@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './board.css';
 import { Topbar } from '../../../components/topbar/Topbar';
-import { bulletinBoard } from '../../../data/bulletinBoard'; // 데이터 import
 
 export const Board = () => {
     const [currentPage, setCurrentpage] = useState(1);
@@ -84,7 +83,7 @@ export const Board = () => {
                                           <a href={`/board/view?id=${post.id}`}>{post.author}</a>
                                       </td>
                                       <td id="post-date">
-                                        <a href={`/board/view?id=${post.id}`}>{post.date.split('T')[0]}</a>
+                                          <a href={`/board/view?id=${post.id}`}>{post.date.split('T')[0]}</a>
                                       </td>
                                   </tr>
                               ))

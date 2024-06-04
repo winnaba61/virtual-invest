@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './boardM.css';
 import { Topbar } from '../../../components/topbar/Topbar';
-import { bulletinBoard } from '../../../data/bulletinBoard'; // 데이터 import
 
 export const BoardM = () => {
     const [currentPage, setCurrentpage] = useState(1);
@@ -52,16 +51,16 @@ export const BoardM = () => {
             })
             .catch((error) => {
                 console.error('로그인 ID를 가져오는 중 오류 발생:', error);
-                alert("로그인 에러가 발생했습니다. 다시 로그인 해주세요.");
+                alert('로그인 에러가 발생했습니다. 다시 로그인 해주세요.');
                 window.location.href = '/';
             });
     }, []);
     useEffect(() => {
         if (!isAdmin) {
-            alert("권한이 없습니다. 다시 로그인 해주세요.");
+            alert('권한이 없습니다. 다시 로그인 해주세요.');
             window.location.href = '/';
         }
-    },[isAdmin]);
+    }, [isAdmin]);
     const handleButtonClickWrite = () => {
         window.location.href = '/manager/board/write';
     };
@@ -93,7 +92,7 @@ export const BoardM = () => {
     return (
         <>
             <Topbar />
-            <p class="board-plane-text"> 관리자 모드</p> 
+            <p class="board-plane-text"> 관리자 모드</p>
             <div className="board">
                 <button className="board-write-button" onClick={handleButtonClickWrite}>
                     글쓰기
@@ -116,21 +115,21 @@ export const BoardM = () => {
                     <tbody>
                         {currentPage == 1
                             ? Mcontents.map((post, index) => (
-                                <tr key={post.id}>
-                                    <td id="post-number">
-                                        <a href={`/manager/board/view?id=${post.id}`}>공지</a>
-                                    </td>
-                                    <td id="post-title">
-                                        <a href={`/manager/board/view?id=${post.id}`}>{post.title}</a>
-                                    </td>
-                                    <td id="post-author">
-                                        <a href={`/manager/board/view?id=${post.id}`}>{post.author}</a>
-                                    </td>
-                                    <td id="post-date">
-                                        <a href={`/manager/board/view?id=${post.id}`}>{post.date.split('T')[0]}</a>
-                                    </td>
-                                </tr>
-                            ))
+                                  <tr key={post.id}>
+                                      <td id="post-number">
+                                          <a href={`/manager/board/view?id=${post.id}`}>공지</a>
+                                      </td>
+                                      <td id="post-title">
+                                          <a href={`/manager/board/view?id=${post.id}`}>{post.title}</a>
+                                      </td>
+                                      <td id="post-author">
+                                          <a href={`/manager/board/view?id=${post.id}`}>{post.author}</a>
+                                      </td>
+                                      <td id="post-date">
+                                          <a href={`/manager/board/view?id=${post.id}`}>{post.date.split('T')[0]}</a>
+                                      </td>
+                                  </tr>
+                              ))
                             : ''}
                         {currentPosts.length > 0 ? (
                             currentPosts.map((post, index) => (
