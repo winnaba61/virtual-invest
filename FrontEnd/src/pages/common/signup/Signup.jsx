@@ -41,6 +41,7 @@ export const Signup = () => {
             alert('생년월일을 입력하세요');
             return;
         }
+        /*
         if (birthdayRef.current.value.length != 8) {
             alert('생년월일을 YYYYMM  DD형식으로 입력하세요');
             return;
@@ -49,7 +50,7 @@ export const Signup = () => {
             alert('생년월일에 숫자만 입력하세요');
             return;
         }
-
+        */
         if (emailRef.current.value == '') {
             alert('이메일을 입력하세요');
             return;
@@ -141,7 +142,7 @@ export const Signup = () => {
                 </div>
                 <input type="password" placeholder="PW" className="signup-input" ref={passwordRef} />
                 <input type="password" placeholder="PW 확인" className="signup-input" ref={confirmPasswordRef} />
-                <input type="text" placeholder="생년월일 (YYYYMMDD)" className="signup-input" ref={birthdayRef} />
+                <input type="text" placeholder="생년월일 (YYYY-MM-DD)" className="signup-input" ref={birthdayRef} />
                 <input type="text" placeholder="이메일" className="signup-input" ref={emailRef} />
                 <input type="text" placeholder="전화번호" className="signup-input" ref={phoneRef} />{' '}
                 {/* 전화번호 입력 추가 */}
