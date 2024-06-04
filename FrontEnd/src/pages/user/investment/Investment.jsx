@@ -88,7 +88,8 @@ export const Investment = () => {
 
             const investableShares = Math.floor(currentWallet / currentPrice); // 투자 가능한 주식 수 계산
 
-            if (investableShares >= parseInt(investmentValue)) { // 투자 가능한 주식 수를 초과하는지 확인
+            if (investableShares >= parseInt(investmentValue)) {
+                // 투자 가능한 주식 수를 초과하는지 확인
                 // 서버로 투자한 주 수, 잔여 잔고를 전달
                 fetch('http://localhost:3000/api/invest', {
                     method: 'POST',
@@ -103,18 +104,18 @@ export const Investment = () => {
                         buy_money: investmentAmount,
                     }),
                 })
-                    .then(response => {
+                    .then((response) => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
                         return response.json();
                     })
-                    .then(data => {
+                    .then((data) => {
                         console.log('Investment successful:', data);
                         // 투자가 성공하면 마이페이지로 이동
                         window.location.href = 'http://localhost:5173/mypage';
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         console.error('Error investing:', error);
                         // 투자에 실패하면 오류 메시지 출력
                         alert('투자에 실패했습니다. 다시 시도해주세요.');
@@ -141,18 +142,18 @@ export const Investment = () => {
                     buy_money: investmentAmount,
                 }),
             })
-                .then(response => {
+                .then((response) => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then((data) => {
                     console.log('Investment successful:', data);
                     // 투자가 성공하면 마이페이지로 이동
                     window.location.href = 'http://localhost:5173/mypage';
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error investing:', error);
                     // 투자에 실패하면 오류 메시지 출력
                     alert('투자에 실패했습니다. 다시 시도해주세요.');
@@ -199,17 +200,17 @@ export const Investment = () => {
                 sellmoney: sellMoney, // 서버에서 기대하는 변수명으로 맞춤
             }),
         })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data => {
+            .then((data) => {
                 console.log('Sell successful:', data);
                 window.location.href = 'http://localhost:5173/mypage';
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error selling:', error);
                 alert('매도에 실패했습니다. 다시 시도해주세요.');
             });
@@ -240,22 +241,26 @@ export const Investment = () => {
                     </button>
                     {foundStock && (
                         <table className="investment-table">
-                            <tr>
-                                <th>현재가</th>
-                                <td>{currentPrice !== null ? currentPrice : 'Loading...'} 원</td>
-                            </tr>
-                            <tr>
-                                <th>1주 당 가격</th>
-                                <td>{currentPrice !== null ? currentPrice : 'Loading...'} 원</td>
-                            </tr>
-                            <tr>
-                                <th>현재 보유 자산</th>
-                                <td>{currentWallet !== null ? currentWallet : 'Loading...'} 원</td>
-                            </tr>
-                            <tr>
-                                <th>가능 투자 주수</th>
-                                <td>{Math.floor(currentWallet / currentPrice)} 주</td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <th>현재가</th>
+                                    <td>
+                                        {currentPrice !== null ? Number(currentPrice).toLocaleString() : 'Loading...'}{' '}
+                                        원
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>현재 보유 자산</th>
+                                    <td>
+                                        {currentWallet !== null ? Number(currentWallet).toLocaleString() : 'Loading...'}{' '}
+                                        원
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>가능 투자 주수</th>
+                                    <td>{Number(Math.floor(currentWallet / currentPrice)).toLocaleString()} 주</td>
+                                </tr>
+                            </tbody>
                         </table>
                     )}
                 </div>
@@ -276,7 +281,12 @@ export const Investment = () => {
                 </div>
                 <div className="investment-price-container">
                     <div className="investment-title">매수/매도 금액 입력</div>
-                    <input className="investment-price" type="number" value={investmentValue} onChange={handleInputChange} />
+                    <input
+                        className="investment-price"
+                        type="number"
+                        value={investmentValue}
+                        onChange={handleInputChange}
+                    />
                 </div>
                 <div className="investment-pagination">
                     <button className="investment-pagination-button" onClick={handleButtonClickBuy}>

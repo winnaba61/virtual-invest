@@ -1,4 +1,4 @@
-export const CJ4우(전환) = [
+export const CJ4우 = [
   {
     "id": "1",
     "itmsNm": "CJ4우(전환)",

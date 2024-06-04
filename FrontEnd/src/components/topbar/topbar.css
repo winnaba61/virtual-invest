@@ -38,5 +38,13 @@
 }
 
 .topbar-menu.active {
-    color: var(--blue);
+    color: var(--green);
+}
+
+.topbar-button {
+    color: var(--white);
+}
+
+.topbar-button.active {
+    color: var(--green);
 }

@@ -8,6 +8,7 @@ export const Signup = () => {
     const confirmPasswordRef = useRef(null);
     const birthdayRef = useRef(null);
     const emailRef = useRef(null);
+    const admin = 0;
     const phoneRef = useRef(null); // 전화번호 입력에 대한 useRef 추가
 
     let checkID = 0;
@@ -40,15 +41,16 @@ export const Signup = () => {
             alert('생년월일을 입력하세요');
             return;
         }
+        /*
         if (birthdayRef.current.value.length != 8) {
-            alert('생년월일을 YYYYMMDD형식으로 입력하세요');
+            alert('생년월일을 YYYYMM  DD형식으로 입력하세요');
             return;
         }
         if (isNaN(birthdayRef.current.value)) {
             alert('생년월일에 숫자만 입력하세요');
             return;
         }
-
+        */
         if (emailRef.current.value == '') {
             alert('이메일을 입력하세요');
             return;
@@ -71,6 +73,7 @@ export const Signup = () => {
                 user_passwd: passwordRef.current.value,
                 user_birth: birthdayRef.current.value,
                 user_email: emailRef.current.value,
+                user_admin: admin,
                 user_phone: phoneRef.current.value, // 전화번호 추가
             }),
         })
@@ -139,9 +142,10 @@ export const Signup = () => {
                 </div>
                 <input type="password" placeholder="PW" className="signup-input" ref={passwordRef} />
                 <input type="password" placeholder="PW 확인" className="signup-input" ref={confirmPasswordRef} />
-                <input type="text" placeholder="생년월일 (YYYYMMDD)" className="signup-input" ref={birthdayRef} />
+                <input type="text" placeholder="생년월일 (YYYY-MM-DD)" className="signup-input" ref={birthdayRef} />
                 <input type="text" placeholder="이메일" className="signup-input" ref={emailRef} />
-                <input type="text" placeholder="전화번호" className="signup-input" ref={phoneRef} /> {/* 전화번호 입력 추가 */}
+                <input type="text" placeholder="전화번호" className="signup-input" ref={phoneRef} />{' '}
+                {/* 전화번호 입력 추가 */}
                 <button className="signup-button" onClick={handleButtonClickSignup}>
                     회원가입
                 </button>

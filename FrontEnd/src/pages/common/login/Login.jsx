@@ -30,6 +30,34 @@ export const Login = () => {
                     localStorage.setItem('user', JSON.stringify(response.user));
                     alert('로그인 성공.');
                     window.location.href = 'http://localhost:5173/main';
+                  
+                    console.log('login successful:');
+                    fetch('http://localhost:3000/api/setLoginInfo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user_id: idRef.current.value,
+                        }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            sessionStorage.clear();
+                            return response.json();
+                        })
+                        .then((response) => {
+                            sessionStorage.setItem('token', response.token);
+                            console.log('set login token: ' + response.token);
+                            //alert('로그인 성공.' + sessionStorage.token);
+                            window.location.href = 'http://localhost:5173/main';
+                        })
+                        .catch((error) => {
+                            console.error('Error checking:', error);
+                        });
+                  
                 } else {
                     console.log('로그인 실패:');
                     alert('로그인 실패.');
@@ -56,9 +84,6 @@ export const Login = () => {
                 <a href="/signup" className="login-text">
                     회원가입
                 </a>
-                <button className="login-button" id="kakao">
-                    카카오톡
-                </button>
             </div>
         </div>
     );
