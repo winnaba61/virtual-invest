@@ -76,6 +76,10 @@ export const UserM = () => {
     }, [isAdmin]);
 
     const handleButtonClickChange = () => {
+        if (isNaN(newValue)) {
+            alert("배정 금액은 숫자만 입력 가능합니다.");
+            return;
+        }
         fetch('http://localhost:3000/api/changeWallet', {
             method: 'PUT',
             headers: {
@@ -150,11 +154,11 @@ export const UserM = () => {
                         </button>
                     </div>
                 </div>
-                <div className="board-pagination">
-                    <button className="board-pagination-button" onClick={handleButtonClickGoBack }>
+                <div className="user-pagination">
+                    <button className="user-pagination-button" onClick={ handleButtonClickGoBack }>
                         뒤로
                     </button>
-                </div>s
+                </div>
             </div>
         </>
     );

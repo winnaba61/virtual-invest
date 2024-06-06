@@ -58,3 +58,22 @@
     width: 10%;
     border-radius: 4px;
 }
+
+.user-pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-pagination-button {
+    width: 160px;
+    height: 40px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--blue);
+    color: var(--white);
+    font-size: 16px;
+    margin: 60px;
+    font-family: var(--font-1);
+}
