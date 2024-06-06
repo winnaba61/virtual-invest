@@ -75,7 +75,7 @@ export const Topbar = () => {
                             게시판
                         </Link>
                     </li>
-                    <li className={`topbar-menu ${activePage === '/mypage' ? 'active' : ''}`}>
+                    <li className={`topbar-menu ${activePage === '/mypage' || activePage.includes('/manager/account')  ? 'active' : ''}`}>
                         <Link to="/mypage">마이페이지</Link>
                     </li>
                     <li className={`topbar-menu ${activePage === '/stockInfo' ? 'active' : ''}`}>

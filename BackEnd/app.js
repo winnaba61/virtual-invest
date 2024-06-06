@@ -15,8 +15,8 @@ module.exports = app;
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'MySQLpass',
-  database: 'swe'
+  password: '1234',
+  database: 'project3'
 });
 
 connection.connect();
@@ -73,6 +73,19 @@ app.get('/api/userName', (req, res) => {
     });
 });
 
+// accountM: 모든 사용자 정보 가져오기
+app.get('/api/allUserInfo', (req, res) => {
+    const query = 'SELECT user_name, user_birth, user_phone, user_account FROM user_info ORDER BY user_name';
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.json(results);
+    });
+});
+
 // board: 공지 게시글 제목만 가져오기
     app.get('/api/mBoardHeadlines', (req, res) => {
         const query = 'SELECT id, author, title, createdAt as date FROM boards WHERE isNotice=1';
@@ -101,6 +114,21 @@ app.get('/api/boardHeadlines', (req, res) => {
 
 // POST 요청 처리
 app.use(express.json());
+
+// accountM: 이름으로 사용자 정보 가져오기
+app.post('/api/userInfo', (req, res) => {
+    const query = 'SELECT user_name, user_birth, user_phone, user_account FROM user_info WHERE user_name=? ORDER BY user_name';
+    connection.query(query, [req.body.name], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(200).json(results);
+    });
+});
+
+
 // 보유 자산 가져오기 (POST 요청으로 user_account 받아오기)
 app.post('/api/current-wallet', (req, res) => {
   const { user_account } = req.body;

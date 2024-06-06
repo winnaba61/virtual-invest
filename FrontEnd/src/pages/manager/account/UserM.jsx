@@ -4,7 +4,7 @@ import TopbarManager from '../../../components/topbar/TopbarManager';
 
 export const UserM = () => {
     const handleButtonClickAdd = () => {
-        window.location.href = 'http://localhost:5173/manager/account';
+        window.location.href = '/manager/account';
     };
     return (
         <>

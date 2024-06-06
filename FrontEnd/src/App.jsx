@@ -35,6 +35,7 @@ function App() {
 
                         {/* 관리자 */}
                         <Route path="/manager/account" element={<AccountM />} />
+                        <Route path="/manager/account/user" element={<AccountM />} />
                         <Route path="/manager/board" element={<BoardM />} />
                         <Route path="/manager/board/view" element={<ViewM />} />
                         <Route path="/manager/board/write" element={<WriteM />} />
