@@ -84,11 +84,6 @@ export const Login = () => {
                 <button className="login-button" onClick={handleButtonClickLogin}>
                     로그인
                 </button>
-<<<<<<< HEAD
-                <a href="/signup" className="login-text">
-                    회원가입
-                </a>
-=======
                 <div>
                     <a href="/signup" className="login-text">
                         회원가입
@@ -103,7 +98,6 @@ export const Login = () => {
                 <button className="login-button" id="kakao">
                     카카오톡
                 </button>
->>>>>>> dongwoo
             </div>
         </div>
     );

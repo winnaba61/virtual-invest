@@ -15,8 +15,8 @@ module.exports = app;
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '1234',
-  database: 'project3'
+  password: 'MySQLpass',
+  database: 'swe'
 });
 
 connection.connect();
