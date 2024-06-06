@@ -241,12 +241,16 @@ export const Mypage = () => {
                             <td>{userName !== null ? userName : 'Loading...'}</td>
                         </tr>
                         <tr>
-                            <th>생일</th>
+                            <th>생년월일</th>
                             <td>{userBirth !== null ? userBirth.split('T')[0] : 'Loading...'}</td>
                         </tr>
                         <tr>
                             <th>전화번호</th>
-                            <td>{userPhone !== null ? userPhone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3') : 'Loading...'}</td>
+                            <td>
+                                {userPhone !== null
+                                    ? userPhone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+                                    : 'Loading...'}
+                            </td>
                         </tr>
                         <tr>
                             <th>가상계좌</th>
@@ -268,10 +272,10 @@ export const Mypage = () => {
                             <td>
                                 {stockNames.length > 0
                                     ? stockNames.reduce((totalProfit, stock) => {
-                                        const profit =
-                                            typeof calculatedValue3[stock] === 'number' ? calculatedValue3[stock] : 0;
-                                        return totalProfit + profit;
-                                    }, 0) + ' 원'
+                                          const profit =
+                                              typeof calculatedValue3[stock] === 'number' ? calculatedValue3[stock] : 0;
+                                          return totalProfit + profit;
+                                      }, 0) + ' 원'
                                     : 'Loading...'}
                             </td>
                         </tr>
@@ -280,10 +284,10 @@ export const Mypage = () => {
                             <td>
                                 {stockNames.length > 0
                                     ? stockNames.reduce((totalProfit4, stock) => {
-                                        const profit4 =
-                                            typeof calculatedValue4[stock] === 'number' ? calculatedValue4[stock] : 0;
-                                        return totalProfit4 + profit4;
-                                    }, 0) + ' 원'
+                                          const profit4 =
+                                              typeof calculatedValue4[stock] === 'number' ? calculatedValue4[stock] : 0;
+                                          return totalProfit4 + profit4;
+                                      }, 0) + ' 원'
                                     : 'Loading...'}
                             </td>
                         </tr>

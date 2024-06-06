@@ -13,21 +13,21 @@
 
 .account-search {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 40px;
 }
 
-.account-search-input {
-    width: 85%;
+.account-input {
+    width: 60%;
     height: 40px;
     border-radius: 4px;
 }
 
-.account-search-button {
+.account-button {
     background-color: var(--blue);
     margin-left: 20px;
     width: 10%;
     border-radius: 4px;
+    height: 40px;
 }
 
 .account-table {
@@ -46,6 +46,11 @@
 .account-table td {
     border: 1px solid var(--white);
     padding: 8px 0;
-    text-align: center;
+    text-align: left;
+    padding-left: 20px;
     color: var(--white);
+}
+
+.account-reset-container {
+    margin-top: 40px;
 }
