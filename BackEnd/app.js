@@ -5,6 +5,7 @@ const mysql = require('mysql');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer'); // 모듈 import
 const app = express();
 const port = 3000;
 
@@ -258,6 +259,229 @@ app.post('/api/login', (req, res) => {
       res.send(login);
     }
   });
+});
+
+//  아이디 찾기
+app.post('/api/findID', (req, res) => {
+  const checkName = req.body.user_name;
+  const checkBirth = req.body.user_birth;
+  const checkPhone = req.body.user_phone;
+  const checkEmail = req.body.user_email;
+  const check = { ischeck: '' };
+
+  console.log(checkName);
+  console.log(checkBirth);
+  console.log(checkPhone);
+  console.log(checkEmail);
+
+  const query = 'SELECT * FROM logins WHERE user_name = ?';
+
+  connection.query(query, [checkName], (error, result) => {
+      console.log(result);
+      if (error) {
+          console.error('Error executing query:', error);
+          res.status(500).send('Server Error');
+          return;
+      }
+
+      if (result.length > 0) {
+          console.log('Name ok');
+
+          if (checkBirth === result[0].user_birth) {
+              if (error) {
+                  console.error('Error executing query:', error);
+                  res.status(500).send('Server Error');
+                  return;
+              }
+
+              console.log('birth ok');
+              if (checkPhone === result[0].user_phone) {
+                  if (error) {
+                      console.error('Error executing query:', error);
+                      res.status(500).send('Server Error');
+                      return;
+                  }
+
+                  console.log('phone ok');
+                  if (checkEmail === result[0].user_email) {
+                      if (error) {
+                          console.error('Error executing query:', error);
+                          res.status(500).send('Server Error');
+                          return;
+                      }
+                      console.log('email ok');
+
+                      const transporter = nodemailer.createTransport({
+                          service: 'naver', // gmail을 사용함
+                          host: "smtp.naver.net", // 사용할 이메일 서비스의 호스트 주소
+                          port: 465, // 이메일 서비스의 포트 번호 (25, 587, 465, 2525 등)
+                          auth : {
+                              user: 'kwcs_go670@naver.com', // 나의 (작성자) 이메일 주소
+                              pass : 'KWCSpass1157!!' // 이메일의 비밀번호
+                          }
+                      });
+            
+                      const mailOptions = {
+                          from: 'kwcs_go670@naver.com', // 작성자
+                          to : result[0].user_email, // 수신자
+                          subject : '소프트웨어공학 2조 웹 페이지 아이디', // 메일 제목
+                          text : '아이디는 [ '+result[0].user_id+' ]입니다.' // 메일 내용
+                      };
+            
+                      transporter.sendMail(mailOptions, function(error, info){
+                          if (error) {
+                              console.log(error);
+                          }
+                          else {
+                              console.log('Email sent: ' + info.response);
+                          }
+                      });
+  
+                      console.log('send email');
+                      check.ischeck = 'ok';
+                      res.send(check);
+                  } else {
+                      console.log('email fault');
+                      check.ischeck = 'fault';
+                      res.send(check);
+                  }
+              } else {
+                  console.log('phone fault');
+                  check.ischeck = 'fault';
+                  res.send(check);
+              }
+          } else {
+              console.log('birth fault');
+              check.ischeck = 'fault';
+              res.send(check);
+          }
+      } else {
+          console.log('name fault');
+          check.ischeck = 'fault';
+          res.send(check);
+      }
+  });
+});
+
+//  패스워드 찾기
+app.post('/api/findPass', (req, res) => {
+const checkID = req.body.user_id;
+const checkName = req.body.user_name;
+const checkBirth = req.body.user_birth;
+const checkPhone = req.body.user_phone;
+const checkEmail = req.body.user_email;
+const check = { ischeck: '' };
+
+console.log(checkID);
+console.log(checkName);
+console.log(checkBirth);
+console.log(checkPhone);
+console.log(checkEmail);
+
+const query = 'SELECT * FROM logins WHERE user_id = ?';
+
+connection.query(query, [checkID], (error, result) => {
+  console.log(result);
+  if (error) {
+    console.error('Error executing query:', error);
+    res.status(500).send('Server Error');
+    return;
+  }
+
+  if (result.length > 0) {
+    console.log('ID ok');
+
+    if (checkName === result[0].user_name) {
+      if (error) {
+        console.error('Error executing query:', error);
+        res.status(500).send('Server Error');
+        return;
+      }
+
+      if (checkBirth === result[0].user_birth) {
+        if (error) {
+          console.error('Error executing query:', error);
+          res.status(500).send('Server Error');
+          return;
+        }
+
+        console.log('birth ok');
+        if (checkPhone === result[0].user_phone) {
+          if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+          }
+
+          console.log('phone ok');
+          if (checkEmail === result[0].user_email) {
+            if (error) {
+              console.error('Error executing query:', error);
+              res.status(500).send('Server Error');
+              return;
+            }
+            console.log('email ok');
+
+            const transporter = nodemailer.createTransport({
+              service: 'naver', // gmail을 사용함
+              host : "smtp.naver.net", // 사용할 이메일 서비스의 호스트 주소
+              port : 465, // 이메일 서비스의 포트 번호 (25, 587, 465, 2525 등)
+              auth : {
+                user: 'kwcs_go670@naver.com', // 나의 (작성자) 이메일 주소
+                pass : 'KWCSpass1157!!' // 이메일의 비밀번호
+              }
+              });
+
+            const mailOptions = {
+              from: 'kwcs_go670@naver.com', // 작성자
+              to : result[0].user_email, // 수신자
+              subject : '소프트웨어공학 2조 웹 페이지 패스워드', // 메일 제목
+              text : '패스워드는 [ ' + result[0].user_passwd + ' ]입니다.' // 메일 내용
+            };
+
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                console.log(error);
+              }
+              else {
+                console.log('Email sent: ' + info.response);
+              }
+            });
+
+            console.log('send email');
+            check.ischeck = 'ok';
+            res.send(check);
+          }
+          else {
+            console.log('email fault');
+            check.ischeck = 'fault';
+            res.send(check);
+          }
+        }
+        else {
+          console.log('phone fault');
+          check.ischeck = 'fault';
+          res.send(check);
+        }
+      }
+      else {
+        console.log('birth fault');
+        check.ischeck = 'fault';
+        res.send(check);
+      }
+    }
+    else {
+      console.log('name fault');
+      check.ischeck = 'fault';
+      res.send(check);
+    }
+  }
+  else {
+    console.log('ID fault');
+    check.ischeck = 'fault';
+    res.send(check);
+  }
+});
 });
 
 //주식 매수

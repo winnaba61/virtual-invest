@@ -48,16 +48,3 @@
     color: var(--white);
     box-shadow: 0px 0px 2px #384d77;
 }
-
-.login-text {
-    font-size: 12px;
-    color: var(--gray);
-    margin-top: 8px;
-    margin-right: 8px;
-}
-
-#kakao {
-    background-color: #fee500;
-    color: var(--black);
-    box-shadow: 0px 0px 2px #a29200;
-}

@@ -84,9 +84,26 @@ export const Login = () => {
                 <button className="login-button" onClick={handleButtonClickLogin}>
                     로그인
                 </button>
+<<<<<<< HEAD
                 <a href="/signup" className="login-text">
                     회원가입
                 </a>
+=======
+                <div>
+                    <a href="/signup" className="login-text">
+                        회원가입
+                    </a>
+                    <a href="/findID" className="login-text">
+                        아이디 찾기
+                    </a>
+                    <a href="/findPass" className="login-text">
+                        비밀번호 찾기
+                    </a>
+                </div>
+                <button className="login-button" id="kakao">
+                    카카오톡
+                </button>
+>>>>>>> dongwoo
             </div>
         </div>
     );

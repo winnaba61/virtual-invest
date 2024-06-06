@@ -4,6 +4,8 @@ import './assets/font.css';
 
 import { Login } from './pages/common/login/Login';
 import { Signup } from './pages/common/signup/Signup';
+import { FindID } from './pages/common/find/FindID';
+import { FindPass } from './pages/common/find/FindPass';
 import { AccountM } from './pages/manager/account/AccountM';
 import { BoardM } from './pages/manager/board/BoardM';
 import { WriteM } from './pages/manager/board/WriteM';
@@ -28,6 +30,8 @@ function App() {
                         {/* 공통 */}
                         <Route path="/" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
+                        <Route path="/findID" element={<FindID />} />
+                        <Route path="/findPass" element={<FindPass />} />
 
                         {/* 관리자 */}
                         <Route path="/manager/account" element={<AccountM />} />
