@@ -116,7 +116,7 @@ app.get('/api/boardHeadlines', (req, res) => {
 app.use(express.json());
 
 // accountM: 이름으로 사용자 정보 가져오기
-app.post('/api/userInfo', (req, res) => {
+app.post('/api/userInfoByName', (req, res) => {
     const query = 'SELECT user_name, user_birth, user_phone, user_account FROM user_info WHERE user_name=? ORDER BY user_name';
     connection.query(query, [req.body.name], (error, results) => {
         if (error) {
@@ -128,6 +128,49 @@ app.post('/api/userInfo', (req, res) => {
     });
 });
 
+// userM: 계좌번호로 사용자 정보 가져오기
+app.post('/api/theUserInfo', (req, res) => {
+    const query = 'SELECT user_name, user_birth, user_phone FROM user_info WHERE user_account=?';
+    const query2 = 'SELECT user_wallet FROM user_account WHERE user_account=?';
+
+    let userInfo = {};
+
+    connection.query(query, [req.body.account], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        if (results.length > 0) {
+            userInfo = results[0];
+        }
+
+        connection.query(query2, [req.body.account], (error, results2) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Server Error');
+                return;
+            }
+            if (results2.length > 0 && results2[0].user_wallet !== undefined) {
+                userInfo.user_wallet = results2[0].user_wallet;
+            }
+            res.status(200).json(userInfo);
+        });
+    });
+});
+
+// userM: 계좌 잔액 변경하기
+app.put('/api/changeWallet', (req, res) => {
+    const query = 'UPDATE user_account SET user_wallet=? WHERE user_account=?;'
+    connection.query(query, [req.body.newVal, req.body.account], (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).send('Server Error');
+            return;
+        }
+        res.status(201).json('success to insert the message');
+    });
+});
 
 // 보유 자산 가져오기 (POST 요청으로 user_account 받아오기)
 app.post('/api/current-wallet', (req, res) => {

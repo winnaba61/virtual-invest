@@ -59,7 +59,7 @@ export const AccountM = () => {
 
     const handleButtonClickSearch = () => {
         if (searchValue)
-            fetch('http://localhost:3000/api/userInfo', {
+            fetch('http://localhost:3000/api/userInfoByName', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
