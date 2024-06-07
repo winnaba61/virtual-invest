@@ -17,6 +17,47 @@ export const Mypage = () => {
     const [calculatedValue2, setCalculatedValue2] = useState({});
     const [calculatedValue3, setCalculatedValue3] = useState({});
     const [calculatedValue4, setCalculatedValue4] = useState({});
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        // 컴포넌트가 마운트될 때 관리자 상태를 가져옴
+        fetch('http://localhost:3000/api/getLoginId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: sessionStorage.getItem('token'),
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                fetch(`http://localhost:3000/api/admin?id=${data.user_key}`)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then((admin) => {
+                        console.log('관리자 상태를 가져왔습니다.');
+                        setIsAdmin(admin.user_admin);
+                    })
+                    .catch((error) => {
+                        console.error('관리자 상태를 가져오는 중 오류 발생:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('로그인 ID를 가져오는 중 오류 발생:', error);
+                alert('로그인 에러가 발생했습니다. 다시 로그인 해주세요.');
+                window.location.href = '/';
+            });
+    }, []);
 
     useEffect(() => {
         // 로컬 스토리지에서 유저 정보를 가져옴
@@ -229,11 +270,22 @@ export const Mypage = () => {
         calculateStockValues4();
     }, [stockNames]);
 
+    const handleButtonClickAdmin = () => {
+        window.location.href = '/manager/account';
+    };
+
     return (
         <>
             <Topbar />
             <div className="mypage">
                 <div className="mypage-user-container">
+                    {
+                        isAdmin?
+                        <button className="mypage-admin-button" onClick={handleButtonClickAdmin}>
+                            유저 관리
+                            </button>
+                            :""
+                    }
                     <div className="mypage-title">개인 정보</div>
                     <table className="mypage-info-table">
                         <tr>
