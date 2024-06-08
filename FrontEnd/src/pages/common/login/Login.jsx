@@ -8,7 +8,7 @@ export const Login = () => {
     const handleButtonClickLogin = () => {
         // 유효성 검사
         if (isNaN(idRef.current.value)) {
-            alert("계좌번호는 숫자만 가능합니다.");
+            alert('계좌번호는 숫자만 가능합니다.');
             return;
         }
         // 로그인 시작
@@ -60,7 +60,6 @@ export const Login = () => {
                         .catch((error) => {
                             console.error('Error checking:', error);
                         });
-                  
                 } else {
                     console.log('로그인 실패:');
                     alert('로그인 실패.');
@@ -95,9 +94,6 @@ export const Login = () => {
                         비밀번호 찾기
                     </a>
                 </div>
-                <button className="login-button" id="kakao">
-                    카카오톡
-                </button>
             </div>
         </div>
     );
