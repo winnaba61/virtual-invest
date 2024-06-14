@@ -36,8 +36,24 @@
     ```
 
 ### 데이터베이스 설정
-1. MySQL을 설치하고 실행합니다.
-2. sequelizer로 migrate 진행합니다. 작성되어져 있는 모든 데이터베이스 table 복제 가능합니다.
+1. MySQL을 설치하고 서버를 설정합니다.
+
+2. /BackEnd/config/config.json에서 development 항목 내의 환경을 MySQL 서버 환경에 맞게 수정합니다.
+
+3. /BackEnd/app.js 파일의 15번째 줄 connection 파트를 MySQL 서버 환경에 맞게 수정합니다.
+
+4. 데이터 베이스에 이번 프로젝트에 필요한 스키마를 생성합니다.
+    ```sh
+    npx sequelize db:create --env development 
+    ```
+5. 데이터 베이스에 이번 프로젝트에 필요한 테이블을 생성합니다.
+    ```sh
+    npx sequelize-cli db:migrate
+    ```
+6. 테이블을 지우고 싶을 경우, 다음 명령어를 실행합니다.
+    ```sh
+    npx sequelize-cli db:migrate:undo:all
+    ```
 
 ### 서버 실행
 1. 개발 서버를 시작합니다.
